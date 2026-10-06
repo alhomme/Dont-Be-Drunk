@@ -333,7 +333,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f23bdc95da28f80409ab186174900f5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpeedManager
-  mRSO_Speed: {fileID: 11400000, guid: fceba4e8940d7374ab18d72fd34ced04, type: 2}
+  mRSO_ForwardSpeed: {fileID: 11400000, guid: fceba4e8940d7374ab18d72fd34ced04, type: 2}
+  mRSO_LateralSpeed: {fileID: 11400000, guid: a4094b499f4562c499ecaecaf7724013, type: 2}
 --- !u!4 &493501874
 Transform:
   m_ObjectHideFlags: 0
