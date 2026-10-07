@@ -158,6 +158,19 @@ MonoBehaviour:
   mSlideInput: {fileID: -2295355012219863129, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   mRSO_ForwardSpeed: {fileID: 11400000, guid: fceba4e8940d7374ab18d72fd34ced04, type: 2}
   mRSO_LateralSpeed: {fileID: 11400000, guid: a4094b499f4562c499ecaecaf7724013, type: 2}
-  duration: 0.5
-  maxRandomDelay: 0.2
-  easeType: 29
+  mBounceForce: 2
+  mJumpHeight: 1.5
+  mGroundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  MGroundDistance: 0.15
+  mGravityBase: 15
+  mGravityMax: 100
+  mJumpDistanceMax: 5
+  mScaleSquashed: {x: 0.65, y: 0.75, z: 0.65}
+  mSquashDuration: 0.08
+  mSquashEase: 5
+  mScaleSlide: {x: 0.65, y: 0.25, z: 0.65}
+  mSlideDurationBase: 1.2
+  mSlideDurationMax: 0.5
+  mSlideEase: 5

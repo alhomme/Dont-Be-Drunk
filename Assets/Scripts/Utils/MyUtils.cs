@@ -3,9 +3,10 @@ using UnityEngine;
 
 public static class MyUtils
 {
-    public static void Log(string message)
+    public static void Log(string message, bool print = true)
     {
-        Debug.Log(message);
+        if (print)
+            Debug.Log(message);
     }
 
     public static void LogList(List<int> intList)

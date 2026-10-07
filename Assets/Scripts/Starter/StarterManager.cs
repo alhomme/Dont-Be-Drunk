@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class StarterManager : MonoBehaviour
 {
+    [Header("RSE")]
     [SerializeField] RSE_LoadScene mRSE_LoadScene;
 
     private void OnEnable()
