@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c25563589ab3f6649be47d3dbd0af211, type: 3}
+  m_Name: SSO_Obstacles
+  m_EditorClassIdentifier: Assembly-CSharp::SSO_Items
+  mValue:
+  - mTag: Hotdog
+    mLayer:
+      serializedVersion: 2
+      m_Bits: 64
+    mCountPerBiome: 0100000001000000020000000200000003000000i
+    mObj: {fileID: 1938452783846109518, guid: 62336c2cd59d58c46a7dd3d7d63cb520, type: 3}
+  - mTag: Pedestrian
+    mLayer:
+      serializedVersion: 2
+      m_Bits: 64
+    mCountPerBiome: 0100000001000000010000000200000002000000i
+    mObj: {fileID: 5255205546566913499, guid: 4ec1d5d577d5e704aa278fc949884372, type: 3}
+  - mTag: Movers
+    mLayer:
+      serializedVersion: 2
+      m_Bits: 64
+    mCountPerBiome: 0100000001000000020000000200000003000000i
+    mObj: {fileID: 2705502655683068545, guid: aaece66b16955b64ba25566d90ef6da1, type: 3}
+  - mTag: Police
+    mLayer:
+      serializedVersion: 2
+      m_Bits: 64
+    mCountPerBiome: 0000000001000000010000000200000002000000i
+    mObj: {fileID: 7044580721560682325, guid: 2240397f1594654458286d7de5e13825, type: 3}

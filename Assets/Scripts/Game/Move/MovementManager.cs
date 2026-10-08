@@ -14,6 +14,9 @@ public class MovementManager : MonoBehaviour
     [SerializeField] private RSO_Speed mRSO_ForwardSpeed;
     [SerializeField] private RSO_Speed mRSO_LateralSpeed;
 
+    [Header("RSE")]
+    [SerializeField] private RSE_StartGame mRSE_StartGame;
+
     [Header("Bounce")]
     [SerializeField] private float mBounceForce = 2f;
 
@@ -41,6 +44,7 @@ public class MovementManager : MonoBehaviour
     [SerializeField] private Ease mSlideEase = Ease.OutQuad;
 
 
+    private bool mGameStarted;
     private Rigidbody mRb;
     private Vector3 mScaleBase;
     //private bool mIsGrounded;
@@ -62,37 +66,31 @@ public class MovementManager : MonoBehaviour
             | RigidbodyConstraints.FreezeRotationZ;
 
         mScaleBase = transform.localScale;
-    }
 
-    private void Start()
-    {
-
-        // TODO: Move into RSE_NewGame
-   //     mIsGrounded = IsGrounded();
-   //     MyUtils.Log("Is Grounded? " + mIsGrounded);
-   //     mWasGrounded = mIsGrounded;
+        mGameStarted = false;
         mIsJumping = false;
         mIsSliding = false;
-
-
-   //     if (mIsGrounded)
-            Bounce();
     }
 
     private void OnEnable()
     {
         mJumpInput.action.performed += OnJump;
         mSlideInput.action.performed += OnSlide;
+        mRSE_StartGame.Event += OnStartGame;
     }
 
     private void OnDisable()
     {
         mJumpInput.action.performed -= OnJump;
         mSlideInput.action.performed -= OnSlide;
+        mRSE_StartGame.Event -= OnStartGame;
     }
 
     private void FixedUpdate()
     {
+        if (!mGameStarted)
+            return;
+
         /* LATERAL MOVEMENT */
         Vector2 stickDirection = mMoveInput.action.ReadValue<Vector2>();
         Vector3 characterDirection = new Vector3(stickDirection.x, 0, 0);
@@ -155,6 +153,10 @@ public class MovementManager : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        MyUtils.Log("MovementManager.OnCollisionEnter", false);
+        if (!mGameStarted)
+            return;
+
         // Landing
         if (((1 << collision.gameObject.layer) & mGroundLayer) != 0)
         {
@@ -251,6 +253,12 @@ public class MovementManager : MonoBehaviour
             .BindToLocalScale(transform);
 
         mIsSliding = false;
+        Bounce();
+    }
+
+    private void OnStartGame()
+    {
+        mGameStarted = true;
         Bounce();
     }
 }

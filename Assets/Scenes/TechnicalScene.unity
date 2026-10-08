@@ -335,6 +335,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpeedManager
   mRSO_ForwardSpeed: {fileID: 11400000, guid: fceba4e8940d7374ab18d72fd34ced04, type: 2}
   mRSO_LateralSpeed: {fileID: 11400000, guid: a4094b499f4562c499ecaecaf7724013, type: 2}
+  pMinSpeed: 3
+  pMaxForwardSpeed: 20
+  pMaxLateralSpeed: 10
 --- !u!4 &493501874
 Transform:
   m_ObjectHideFlags: 0
@@ -427,6 +430,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DistanceManager
   mRSO_Distance: {fileID: 11400000, guid: a4dcfb46f7a990c4cbb087c98e446bea, type: 2}
   mRSO_Biome: {fileID: 11400000, guid: 4dae615f923e2894294eed811ae93a23, type: 2}
+  mRSE_UpdateDistance: {fileID: 11400000, guid: 5f03cf0d9cd82ca45aa7478ebec6788b, type: 2}
 --- !u!4 &923206179
 Transform:
   m_ObjectHideFlags: 0

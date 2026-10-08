@@ -14,6 +14,8 @@ public class SceneLoadManager : MonoBehaviour
 
     private void OnEnable()
     {
+        MyUtils.Log("SceneLoadManager.OnEnable");
+
         mActiveScene = "StarterScene";
         mRSE_LoadScene.Event += OnLoadScene;
         SceneManager.sceneLoaded += OnSceneLoaded;
