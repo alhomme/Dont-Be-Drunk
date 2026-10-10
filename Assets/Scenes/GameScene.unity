@@ -378,6 +378,7 @@ MonoBehaviour:
   mObstaclesPool: {fileID: 171681642}
   mRSO_Distance: {fileID: 11400000, guid: a4dcfb46f7a990c4cbb087c98e446bea, type: 2}
   mRSO_Biome: {fileID: 11400000, guid: 4dae615f923e2894294eed811ae93a23, type: 2}
+  mRSO_Seed: {fileID: 11400000, guid: f9f3771198be8b84283304388529686c, type: 2}
   mRSE_StartGame: {fileID: 11400000, guid: 434494670f3e3364cbc12424bff80265, type: 2}
   mRSE_UpdateDistance: {fileID: 11400000, guid: 5f03cf0d9cd82ca45aa7478ebec6788b, type: 2}
   mSSO_Obstacles: {fileID: 11400000, guid: b28bfc0f22bc11340a713b781de307a5, type: 2}

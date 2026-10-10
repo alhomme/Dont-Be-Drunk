@@ -2,6 +2,7 @@ using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.UIElements;
@@ -21,6 +22,7 @@ public class ProcGenManager : MonoBehaviour
     [Header("RSO")]
     [SerializeField] private RSO_Distance mRSO_Distance;
     [SerializeField] private RSO_Biome mRSO_Biome;
+    [SerializeField] private RSO_Seed mRSO_Seed;
 
     [Header("RSE")]
     [SerializeField] private RSE_StartGame mRSE_StartGame;
@@ -38,6 +40,22 @@ public class ProcGenManager : MonoBehaviour
 
     private List<Vector2> mPositionsAvailable = new List<Vector2>();
 
+    private void OnEnable()
+    {
+        mRSO_Seed.Value = 0;
+    }
+
+    private void OnDisable()
+    {
+        MyUtils.Log("ProcGenManager.OnDisable", false);
+        mGameStarted = false;
+
+        mRSO_Seed.Value = 0;
+
+        // Deactivate all active gameObjects from pools
+        //mRoadPool.DeactivatePool();
+    }
+
     private IEnumerator Start()
     {
         MyUtils.Log("ProcGenManager.Start");
@@ -46,7 +64,8 @@ public class ProcGenManager : MonoBehaviour
         yield return new WaitUntil(() => mObstaclesPool.pIsInitialized);
 
         // Create seed
-        pSeed = UnityEngine.Random.Range(0, 1000000);
+        pSeed = UnityEngine.Random.Range(0, 10000000);
+        mRSO_Seed.Value = pSeed;
         MyUtils.Log("Seed: " + pSeed);
         UnityEngine.Random.InitState(pSeed);
 
@@ -74,17 +93,8 @@ public class ProcGenManager : MonoBehaviour
         // Check for tutorial
 
         // Start Game
-        //mRSE_StartGame.Dispatch();
-        //mGameStarted = true;
-    }
-
-    private void OnDisable()
-    {
-        MyUtils.Log("ProcGenManager.OnDisable", false);
-        mGameStarted = false;
-
-        // Deactivate all active gameObjects from pools
-        //mRoadPool.DeactivatePool();
+        mRSE_StartGame.Dispatch();
+        mGameStarted = true;
     }
 
     private void FixedUpdate()
@@ -136,7 +146,7 @@ public class ProcGenManager : MonoBehaviour
             }
         }
 
-        // Generate items at position
+        // Generate items at random position
 
         // Generate environment
         
