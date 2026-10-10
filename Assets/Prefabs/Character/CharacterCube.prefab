@@ -160,7 +160,7 @@ MonoBehaviour:
   mRSO_LateralSpeed: {fileID: 11400000, guid: a4094b499f4562c499ecaecaf7724013, type: 2}
   mRSE_StartGame: {fileID: 11400000, guid: 434494670f3e3364cbc12424bff80265, type: 2}
   mBounceForce: 2
-  mJumpHeight: 1.5
+  mJumpHeight: 1
   mGroundLayer:
     serializedVersion: 2
     m_Bits: 8

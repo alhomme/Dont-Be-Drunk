@@ -9,6 +9,8 @@ public class DistanceManager : MonoBehaviour
     [Header("RSE")]
     [SerializeField] private RSE_UpdateDistance mRSE_UpdateDistance;
 
+    private int mBiomeChangeDistance = 510;
+
     private void OnEnable()
     {
         mRSO_Distance.Value = 0;
@@ -30,9 +32,11 @@ public class DistanceManager : MonoBehaviour
         {
             mRSO_Biome.Value = 0;
         }
-        else if (newDistance % 510 == 0)
+        else if (newDistance % mBiomeChangeDistance == 0)
         {
             mRSO_Biome.Value += 1;
+            if (mRSO_Biome.Value > 3)
+                mRSO_Biome.Value = 0;
         }
     }
 }

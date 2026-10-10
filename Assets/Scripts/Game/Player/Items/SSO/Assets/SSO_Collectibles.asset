@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c25563589ab3f6649be47d3dbd0af211, type: 3}
+  m_Name: SSO_Collectibles
+  m_EditorClassIdentifier: Assembly-CSharp::SSO_Items
+  mValue:
+  - mTag: Heart
+    mLayer:
+      serializedVersion: 2
+      m_Bits: 128
+    mCountPerBiome: 0200000003000000040000000400000004000000i
+    mPrefab: {fileID: 7262619678523155649, guid: bb9f52c48d18d0a4e82f3ec702464a85, type: 3}
+  - mTag: Puke
+    mLayer:
+      serializedVersion: 2
+      m_Bits: 128
+    mCountPerBiome: 0100000002000000030000000400000004000000i
+    mPrefab: {fileID: 653635073869537575, guid: 8dda042ddf8242243983670bacbe7f17, type: 3}

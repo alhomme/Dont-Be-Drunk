@@ -17,7 +17,7 @@ public class SpeedManager : MonoBehaviour
         MyUtils.Log("SpeedManager.OnEnable", false);
 
         mRSO_ForwardSpeed.Value = pMinSpeed;
-        mRSO_LateralSpeed.Value = 3f;
+        mRSO_LateralSpeed.Value = pMinSpeed;
         countTime = 0f;
     }
 

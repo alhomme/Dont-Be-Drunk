@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d196bd7ab261ecb42862efe9dd41d88b, type: 3}
+  m_Name: SSO_ItemsAlcohol
+  m_EditorClassIdentifier: Assembly-CSharp::SSO_ItemsAlcohol
+  mValue:
+    mLayer:
+      serializedVersion: 2
+      m_Bits: 256
+    mCountPerBiome: 0200000003000000040000000500000005000000i
+    mTags:
+    - Beer
+    - Wine
+    - Tequila
+    mPrefabs:
+    - {fileID: 4626892566372901586, guid: 89cce4686fe289749a2316300685dbb4, type: 3}
+    - {fileID: 550852978454777671, guid: 4a42da4dae4af1a46b0f08b0d9f1f7e7, type: 3}
+    - {fileID: 7504472191982676423, guid: d8764221bc5bd0144ae1aad5623df5b8, type: 3}
+    mRates: 3c0000005a00000064000000i
+    mEffects: 010000000200000003000000i

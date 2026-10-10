@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 171681641}
   - component: {fileID: 171681642}
   m_Layer: 0
-  m_Name: PoolObstacleManager
+  m_Name: PoolItemsManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -163,15 +163,57 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4e25ab297f700145aca4e71842a9558, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObstaclesPool
-  mPedestrianPrefab: {fileID: 5255205546566913499, guid: 4ec1d5d577d5e704aa278fc949884372, type: 3}
-  mPedestrianAmount: 10
-  mPolicePrefab: {fileID: 7044580721560682325, guid: 2240397f1594654458286d7de5e13825, type: 3}
-  mPoliceAmount: 10
-  mHotdogPrefab: {fileID: 1938452783846109518, guid: 62336c2cd59d58c46a7dd3d7d63cb520, type: 3}
-  mHotdogAmount: 15
-  mMoversPrefab: {fileID: 2705502655683068545, guid: aaece66b16955b64ba25566d90ef6da1, type: 3}
-  mMoversAmount: 15
+  mSSO_Obstacles: {fileID: 11400000, guid: b28bfc0f22bc11340a713b781de307a5, type: 2}
+  mSSO_Collectibles: {fileID: 11400000, guid: dd802ec39dcc3a24fa010ce53c00fcca, type: 2}
+  mAmount: 10
   pIsInitialized: 0
+--- !u!1 &220501453
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 220501455}
+  - component: {fileID: 220501454}
+  m_Layer: 0
+  m_Name: PoolAlcoholManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &220501454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 220501453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a9324e51c253ef478487ded2faec45a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AlcoholPool
+  mSSO_ItemsAlcohol: {fileID: 11400000, guid: 5db1dc005c61e2b4a8377abe366b7fc3, type: 2}
+  mAmount: 10
+  pIsInitialized: 0
+--- !u!4 &220501455
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 220501453}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 15}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &292048730
 GameObject:
   m_ObjectHideFlags: 0
@@ -375,13 +417,17 @@ MonoBehaviour:
   mCharacterPrefab: {fileID: 2060697253741032292, guid: 186feb15a161da84db5047b80d434d1b, type: 3}
   mCameraPC: {fileID: 292048735}
   mRoadPool: {fileID: 951791711}
-  mObstaclesPool: {fileID: 171681642}
+  mItemsPool: {fileID: 171681642}
+  mAlcoholPool: {fileID: 220501454}
+  mBiomePool: {fileID: 1692661129}
   mRSO_Distance: {fileID: 11400000, guid: a4dcfb46f7a990c4cbb087c98e446bea, type: 2}
   mRSO_Biome: {fileID: 11400000, guid: 4dae615f923e2894294eed811ae93a23, type: 2}
   mRSO_Seed: {fileID: 11400000, guid: f9f3771198be8b84283304388529686c, type: 2}
   mRSE_StartGame: {fileID: 11400000, guid: 434494670f3e3364cbc12424bff80265, type: 2}
   mRSE_UpdateDistance: {fileID: 11400000, guid: 5f03cf0d9cd82ca45aa7478ebec6788b, type: 2}
   mSSO_Obstacles: {fileID: 11400000, guid: b28bfc0f22bc11340a713b781de307a5, type: 2}
+  mSSO_Collectibles: {fileID: 11400000, guid: dd802ec39dcc3a24fa010ce53c00fcca, type: 2}
+  mSSO_ItemsAlcohol: {fileID: 11400000, guid: 5db1dc005c61e2b4a8377abe366b7fc3, type: 2}
   pSeed: 0
 --- !u!1 &951791710
 GameObject:
@@ -413,7 +459,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Pool
   mPrefab: {fileID: 2033281492421838100, guid: 3124b25062d50e3488a298762ec5224e, type: 3}
-  mAmount: 5
+  mAmount: 10
   pIsInitialized: 0
 --- !u!4 &951791712
 Transform:
@@ -430,6 +476,57 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1692661127
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1692661128}
+  - component: {fileID: 1692661129}
+  m_Layer: 0
+  m_Name: PoolBiomeManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1692661128
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1692661127}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1692661129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1692661127}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a37c023b5cb6e2143adfe5984ee8cfbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BiomePool
+  mBiomesPrefab:
+  - {fileID: 5906348543238682254, guid: d689c6c83bf95b248bc7d0d4cc9bb2f2, type: 3}
+  - {fileID: 4065036649731570370, guid: be2b18f5ac9c7de4390c61d3465ac40b, type: 3}
+  - {fileID: 904772374122333119, guid: 1c89e6aeb01af224dbe080038aa12df9, type: 3}
+  - {fileID: 4070286551850034389, guid: 3fc8de9f40ea54c4b974208081969a3b, type: 3}
+  mAmount: 20
+  pIsInitialized: 0
 --- !u!1 &1823569901
 GameObject:
   m_ObjectHideFlags: 0
@@ -565,4 +662,6 @@ SceneRoots:
   - {fileID: 1823569903}
   - {fileID: 951791712}
   - {fileID: 171681641}
+  - {fileID: 1692661128}
+  - {fileID: 220501455}
   - {fileID: 472937060}

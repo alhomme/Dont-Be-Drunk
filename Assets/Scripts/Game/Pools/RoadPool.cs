@@ -8,7 +8,7 @@ public class RoadPool : MonoBehaviour
     [SerializeField] private GameObject mPrefab;
     [SerializeField] private int mAmount;
 
-    private List<GameObject> m_PooledObjects;
+    private List<GameObject> mPooledObjects;
     [HideInInspector] public bool pIsInitialized;
 
     private void Awake()
@@ -20,12 +20,12 @@ public class RoadPool : MonoBehaviour
 
     private void InitializePool()
     {
-        m_PooledObjects = new List<GameObject>();
+        mPooledObjects = new List<GameObject>();
         for (int i = 0; i < mAmount; i++)
         {
             GameObject obj = Instantiate(mPrefab, transform);
             obj.SetActive(false);
-            m_PooledObjects.Add(obj);
+            mPooledObjects.Add(obj);
         }
 
         pIsInitialized = true;
@@ -33,18 +33,18 @@ public class RoadPool : MonoBehaviour
 
     public GameObject GetPooledObject()
     {
-        for (int i = 0; i < m_PooledObjects.Count; i++)
+        for (int i = 0; i < mPooledObjects.Count; i++)
         {
-            if (!m_PooledObjects[i].activeInHierarchy)
+            if (!mPooledObjects[i].activeInHierarchy)
             {
-                return m_PooledObjects[i];
+                return mPooledObjects[i];
             }
         }
 
         MyUtils.Log("RoadPool: All elements in pool are used, creating a new one");
         GameObject obj = Instantiate(mPrefab, transform);
         obj.SetActive(false);
-        m_PooledObjects.Add(obj);
+        mPooledObjects.Add(obj);
 
         return obj;
     }
@@ -53,11 +53,11 @@ public class RoadPool : MonoBehaviour
     {
         List<GameObject> objs = new List<GameObject>();
 
-        for (int i = 0; i < m_PooledObjects.Count; i++)
+        for (int i = 0; i < mPooledObjects.Count; i++)
         {
-            if (m_PooledObjects[i].transform.position.z <= positionZ)
+            if (mPooledObjects[i].transform.position.z <= positionZ)
             {
-                objs.Add(m_PooledObjects[i]);
+                objs.Add(mPooledObjects[i]);
             }
         }
 
@@ -66,9 +66,9 @@ public class RoadPool : MonoBehaviour
 
     public void DeactivatePool()
     {
-        for (int i = 0; i < m_PooledObjects.Count; i++)
+        for (int i = 0; i < mPooledObjects.Count; i++)
         {
-            m_PooledObjects[i].SetActive(false);
+            mPooledObjects[i].SetActive(false);
         }
 
         pIsInitialized = false;

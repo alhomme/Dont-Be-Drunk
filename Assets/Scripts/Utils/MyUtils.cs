@@ -22,4 +22,18 @@ public static class MyUtils
 
         Log(str);
     }
+
+    public static void LogList(List<Vector2> vec2List)
+    {
+        string str = "List = { ";
+
+        foreach (var i in vec2List)
+        {
+            str += i.ToString();
+            str += " ";
+        }
+        str += "}";
+
+        Log(str);
+    }
 }
