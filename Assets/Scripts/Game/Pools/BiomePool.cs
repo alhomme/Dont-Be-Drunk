@@ -44,7 +44,7 @@ public class BiomePool : MonoBehaviour
             }
         }
 
-        MyUtils.Log("BiomePool: All elements in pool are used, creating a new one");
+        //MyUtils.Log("BiomePool: All elements in pool are used, creating a new one");
         GameObject obj = Instantiate(mBiomesPrefab[idx], transform);
         obj.SetActive(false);
         mPooledObjects[idx].Add(obj);

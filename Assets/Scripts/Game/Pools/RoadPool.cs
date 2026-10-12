@@ -41,7 +41,7 @@ public class RoadPool : MonoBehaviour
             }
         }
 
-        MyUtils.Log("RoadPool: All elements in pool are used, creating a new one");
+        //MyUtils.Log("RoadPool: All elements in pool are used, creating a new one");
         GameObject obj = Instantiate(mPrefab, transform);
         obj.SetActive(false);
         mPooledObjects.Add(obj);

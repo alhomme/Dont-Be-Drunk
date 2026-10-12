@@ -13,6 +13,7 @@ public class PlayerManager : MonoBehaviour
     [Header("RSO")]
     [SerializeField] private RSO_Speed mRSO_ForwardSpeed;
     [SerializeField] private RSO_Speed mRSO_LateralSpeed;
+    [SerializeField] private RSO_Distance mRSO_Distance;
 
     [Header("RSE")]
     [SerializeField] private RSE_StartGame mRSE_StartGame;
@@ -25,7 +26,7 @@ public class PlayerManager : MonoBehaviour
 
     [Header("Ground Detection")]
     [SerializeField] private LayerMask mGroundLayer;
-    [SerializeField] private float MGroundDistance = 0.15f;
+    [SerializeField] private float mGroundDistance = 0.02f;
 
     [Header("Gravity")]
     [SerializeField] private float mGravityBase = 15;
@@ -77,6 +78,8 @@ public class PlayerManager : MonoBehaviour
         mJumpInput.action.performed += OnJump;
         mSlideInput.action.performed += OnSlide;
         mRSE_StartGame.Event += OnStartGame;
+
+        mRSO_Distance.Value = 0;
     }
 
     private void OnDisable()
@@ -115,13 +118,18 @@ public class PlayerManager : MonoBehaviour
         /* FORWARD MOVEMENT */
         MoveForward();
         ApplyGravity();
+
+        if ((int)(transform.position.z) > mRSO_Distance.Value)
+        {
+            mRSO_Distance.Value = (int)(transform.position.z);
+        }
     }
 
     private bool IsGrounded()
     {
         Collider col = GetComponent<Collider>();
         Vector3 origin = col.bounds.center;
-        float distance = col.bounds.extents.y + MGroundDistance;
+        float distance = col.bounds.extents.y + mGroundDistance;
 
         return Physics.Raycast(origin, 
             Vector3.down,
@@ -132,11 +140,17 @@ public class PlayerManager : MonoBehaviour
 
     private void ApplyGravity()
     {
-        if (IsGrounded())
+        //MyUtils.Log("PlayerManager.ApplyGravity");
+
+        //if (IsGrounded())
+        //    return;
+
+        if (!mIsJumping)
             return;
 
-        float targetGravity = GetJumpGravity();
+        //MyUtils.Log("PlayerManager.ApplyGravity: NotGrounded");
 
+        float targetGravity = GetJumpGravity();
         float extraGravity = targetGravity - Mathf.Abs(Physics.gravity.y);
 
         if (extraGravity > 0f)
@@ -157,22 +171,26 @@ public class PlayerManager : MonoBehaviour
         if (!mGameStarted)
             return;
 
-        // Landing
-        if (((1 << collision.gameObject.layer) & mGroundLayer) != 0)
-        {
-            mIsJumping = false;
-            Bounce();
-        }
+        // Collision with something else than ground;
+        if (((1 << collision.gameObject.layer) & mGroundLayer) == 0)
+            return;
+
+        // Player is going up
+        if (mRb.linearVelocity.y > 0.1f)
+            return;
+
+        mIsJumping = false;
+        Bounce();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        MyUtils.Log("MovementManager.OnTriggerEnter: " + other.tag);
+        MyUtils.Log("MovementManager.OnTriggerEnter: " + other.tag, false);
     }
 
     private void Bounce()
     {
-        if (mIsSliding)
+        if (mIsSliding || mIsJumping)
             return;
 
         //MyUtils.Log("Baby faut que ça bounce");
@@ -185,9 +203,12 @@ public class PlayerManager : MonoBehaviour
 
     private void OnJump(InputAction.CallbackContext ctx)
     {
+        MyUtils.Log("PlayerManager.OnJump: " + mIsJumping);
+
         if (!mIsJumping)
         {
-            MyUtils.Log("Position before jump: " + transform.position.z + " with speed " + mRSO_ForwardSpeed.Value);
+            mIsJumping = true;
+            //MyUtils.Log("Position before jump: " + transform.position.z + " with speed " + mRSO_ForwardSpeed.Value);
 
             float jumpGravity = GetJumpGravity();
             float jumpForce = Mathf.Sqrt(2f * jumpGravity * mJumpHeight);
@@ -195,8 +216,6 @@ public class PlayerManager : MonoBehaviour
             Vector3 newVelocity = mRb.linearVelocity;
             newVelocity.y = jumpForce;
             mRb.linearVelocity = newVelocity;
-
-            mIsJumping = true;
         }
     }
 

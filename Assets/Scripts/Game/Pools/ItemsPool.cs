@@ -52,7 +52,7 @@ public class ItemsPool : MonoBehaviour
 
     public GameObject GetPooledObjectByName(string name)
     {
-        MyUtils.Log("GetPooledObjectByName: " + name);
+        //MyUtils.Log("GetPooledObjectByName: " + name);
         for (int i = 0; i < mPooledObjects.Count; i++)
         {
             if (mPooledObjects[i].tag == name && !mPooledObjects[i].activeInHierarchy)

@@ -568,53 +568,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &923206177
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 923206179}
-  - component: {fileID: 923206178}
-  m_Layer: 0
-  m_Name: DistanceManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &923206178
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 923206177}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1efc78e4a02783c44b65c03f4ff77841, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DistanceManager
-  mRSO_Distance: {fileID: 11400000, guid: a4dcfb46f7a990c4cbb087c98e446bea, type: 2}
-  mRSO_Biome: {fileID: 11400000, guid: 4dae615f923e2894294eed811ae93a23, type: 2}
-  mRSE_UpdateDistance: {fileID: 11400000, guid: 5f03cf0d9cd82ca45aa7478ebec6788b, type: 2}
---- !u!4 &923206179
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 923206177}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: -0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1188666957
 GameObject:
   m_ObjectHideFlags: 0
@@ -964,7 +917,7 @@ MonoBehaviour:
   mRSE_GameOver: {fileID: 11400000, guid: e1af525915569f346b82816d45e009d1, type: 2}
   mRSO_Tutorial: {fileID: 11400000, guid: 82296bff2e9f6f8499733bd4962b415f, type: 2}
   mRSO_Name: {fileID: 11400000, guid: f897af972403d364a84939b22b53d3c8, type: 2}
-  mRSO_Distance: {fileID: 11400000, guid: a4dcfb46f7a990c4cbb087c98e446bea, type: 2}
+  mRSO_Distance: {fileID: 11400000, guid: a0c472b35d1e19a4f9f00ff6d7d2eb9a, type: 2}
   mRSO_Seed: {fileID: 11400000, guid: f9f3771198be8b84283304388529686c, type: 2}
   mScoreText: {fileID: 1276493549}
   mSeedText: {fileID: 573039023}
@@ -979,6 +932,5 @@ SceneRoots:
   - {fileID: 1188666959}
   - {fileID: 177386772}
   - {fileID: 298479001}
-  - {fileID: 923206179}
   - {fileID: 493501874}
   - {fileID: 862908939}

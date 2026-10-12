@@ -39,7 +39,7 @@ public class AlcoholPool : MonoBehaviour
     public GameObject GetPooledObject()
     {
         int randNb = UnityEngine.Random.Range(0, 100);
-        MyUtils.Log("AlcoholPool.GetPooledObject: Random number is " + randNb);
+        //MyUtils.Log("AlcoholPool.GetPooledObject: Random number is " + randNb);
 
         for (int i = 0; i < mSSO_ItemsAlcohol.Value.mRates.Length; i++)
         {
@@ -54,7 +54,7 @@ public class AlcoholPool : MonoBehaviour
 
     public GameObject GetPooledObjectByName(string name)
     {
-        MyUtils.Log("GetPooledObjectByName: " + name);
+        //MyUtils.Log("GetPooledObjectByName: " + name);
         for (int i = 0; i < mPooledObjects.Count; i++)
         {
             if (mPooledObjects[i].tag == name && !mPooledObjects[i].activeInHierarchy)
