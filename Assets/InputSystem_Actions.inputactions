@@ -72,6 +72,28 @@
                 },
                 {
                     "name": "",
+                    "id": "365d9f09-81f2-414f-b08e-5a69292e3788",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse;Touch",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "23e9197a-66fb-45f1-a1a9-181637005626",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "c2b47fbb-4031-488c-9e99-123c8755c004",
                     "path": "<Keyboard>/leftShift",
                     "interactions": "",
@@ -94,11 +116,33 @@
                 },
                 {
                     "name": "",
-                    "id": "c5dc4809-2adf-40a2-a1f4-e84706d43bbe",
+                    "id": "175a7faf-696c-4576-bd1b-073009112294",
                     "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
+                    "groups": ";Keyboard&Mouse;Gamepad",
+                    "action": "Slide",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0671a40b-fece-4b1a-a327-e21650298f9e",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
                     "groups": ";Keyboard&Mouse",
+                    "action": "Slide",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c5dc4809-2adf-40a2-a1f4-e84706d43bbe",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse;Touch",
                     "action": "Phone",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -110,6 +154,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
+                    "action": "Phone",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "dd7af689-d295-47a4-b33c-4b5dc893fc95",
+                    "path": "<Keyboard>/rightShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
                     "action": "Phone",
                     "isComposite": false,
                     "isPartOfComposite": false

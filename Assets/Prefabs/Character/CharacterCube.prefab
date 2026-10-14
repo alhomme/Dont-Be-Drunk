@@ -9,10 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3686627321445519229}
-  - component: {fileID: 9135081046242189088}
-  - component: {fileID: 3223879115714760564}
+  - component: {fileID: 7269777190984658151}
+  - component: {fileID: 3733292652043525690}
   - component: {fileID: 6804638663448062077}
-  - component: {fileID: 1688608237511284872}
   - component: {fileID: 8689991131529209226}
   m_Layer: 0
   m_Name: CharacterCube
@@ -36,7 +35,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &9135081046242189088
+--- !u!33 &7269777190984658151
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44,7 +43,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2060697253741032292}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &3223879115714760564
+--- !u!23 &3733292652043525690
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -114,33 +113,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &1688608237511284872
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2060697253741032292}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 0
 --- !u!114 &8689991131529209226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -160,21 +132,26 @@ MonoBehaviour:
   mRSO_LateralSpeed: {fileID: 11400000, guid: a4094b499f4562c499ecaecaf7724013, type: 2}
   mRSO_Distance: {fileID: 11400000, guid: a0c472b35d1e19a4f9f00ff6d7d2eb9a, type: 2}
   mRSE_StartGame: {fileID: 11400000, guid: 434494670f3e3364cbc12424bff80265, type: 2}
-  mBounceForce: 2
-  mJumpHeight: 1
+  mGroundY: 0.5
+  mBounceHeight: 0.2
+  mBounceDistance: 1
+  mBounceEase: 3
+  mLandScale: 0.2
+  mLandDuration: 0.15
+  mLandEase: 5
+  mJumpHeight: 1.2
+  mJumpDistance: 2.5
+  mJumpEase: 3
+  mSlideScale: 0.6
+  mSlideDistance: 3
+  mSlideEase: 5
   mGroundLayer:
     serializedVersion: 2
     m_Bits: 8
   mGroundDistance: 0.02
   mGravityBase: 15
   mGravityMax: 100
-  mScaleSquashed: {x: 0.65, y: 0.75, z: 0.65}
-  mSquashDuration: 0.08
-  mSquashEase: 5
   mScaleSlide: {x: 0.65, y: 0.25, z: 0.65}
-  mSlideDurationBase: 1.2
-  mSlideDurationMax: 0.5
-  mSlideEase: 5
   pMinSpeed: 3
   pMaxForwardSpeed: 20
   pMaxLateralSpeed: 10

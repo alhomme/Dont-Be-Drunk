@@ -21,7 +21,7 @@ public class SpeedManager : MonoBehaviour
         countTime = 0f;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         countTime += Time.deltaTime;
 

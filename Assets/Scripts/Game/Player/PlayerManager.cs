@@ -18,59 +18,58 @@ public class PlayerManager : MonoBehaviour
     [Header("RSE")]
     [SerializeField] private RSE_StartGame mRSE_StartGame;
 
+    [Header("Ground")]
+    [SerializeField] private float mGroundY = 0.5f;
+
     [Header("Bounce")]
-    [SerializeField] private float mBounceForce = 2f;
-
-    [Header("Jump")]
-    [SerializeField] private float mJumpHeight = 2f;
-
-    [Header("Ground Detection")]
-    [SerializeField] private LayerMask mGroundLayer;
-    [SerializeField] private float mGroundDistance = 0.02f;
-
-    [Header("Gravity")]
-    [SerializeField] private float mGravityBase = 15;
-    [SerializeField] private float mGravityMax = 100f;
+    [SerializeField] private float mBounceHeight = 0.2f;
+    [SerializeField] private float mBounceDistance = 1.5f;
+    [SerializeField] private Ease mBounceEase = Ease.InOutSine;
+    private MotionHandle mBounceMotion;
 
     [Header("Landing")]
-    [SerializeField] private Vector3 mScaleSquashed = new Vector3(0.65f, 0.75f, 0.65f);
-    [SerializeField] private float mSquashDuration = 0.08f;
-    [SerializeField] private Ease mSquashEase = Ease.OutQuad;
+    [SerializeField] private float mLandScale = 0.2f;
+    [SerializeField] private float mLandDuration = 0.15f;
+    [SerializeField] private Ease mLandEase = Ease.OutQuad;
+    private MotionHandle mLandMotion;
 
+    [Header("Jump")]
+    [SerializeField] private float mJumpHeight = 1.2f;
+    [SerializeField] private float mJumpDistance = 3f;
+    [SerializeField] private Ease mJumpEase = Ease.InOutSine;
+    private MotionHandle mJumpMotion;
 
     [Header("Slide")]
-    [SerializeField] private Vector3 mScaleSlide = new Vector3(0.65f, 0.25f, 0.65f);
-    [SerializeField] private float mSlideDurationBase = 1.2f;
-    [SerializeField] private float mSlideDurationMax = 0.5f;
+    [SerializeField] private Vector3 mSlideScale = new Vector3(0.65f, 0.25f, 0.65f);
+    [SerializeField] private float mSlideDistance = 3f;
     [SerializeField] private Ease mSlideEase = Ease.OutQuad;
+    private MotionHandle mslideMotion;
 
 
     private bool mGameStarted;
-    private Rigidbody mRb;
     private Vector3 mScaleBase;
-    //private bool mIsGrounded;
-    //private bool mWasGrounded;
-    private bool mIsJumping;
-    private bool mIsSliding;
 
-    [Header("Speed")]
-    public float pMinSpeed = 3f;
-    public float pMaxForwardSpeed = 20f;
-    public float pMaxLateralSpeed = 10f;
+
+    private enum PlayerState
+    {
+        Idle,
+        Landing,
+        Bouncing,
+        Jumping,
+        Sliding
+    }
+    private PlayerState mState;
+
+
 
 
     private void Awake()
     {
-        mRb = GetComponent<Rigidbody>();
-        mRb.constraints = RigidbodyConstraints.FreezeRotationX
-            | RigidbodyConstraints.FreezeRotationY
-            | RigidbodyConstraints.FreezeRotationZ;
-
         mScaleBase = transform.localScale;
 
         mGameStarted = false;
-        mIsJumping = false;
-        mIsSliding = false;
+
+        mState = PlayerState.Idle;
     }
 
     private void OnEnable()
@@ -87,6 +86,14 @@ public class PlayerManager : MonoBehaviour
         mJumpInput.action.performed -= OnJump;
         mSlideInput.action.performed -= OnSlide;
         mRSE_StartGame.Event -= OnStartGame;
+
+        StopState(mState);
+    }
+
+    private void OnStartGame()
+    {
+        mGameStarted = true;
+        UpdateState(PlayerState.Bouncing);
     }
 
     private void FixedUpdate()
@@ -94,30 +101,7 @@ public class PlayerManager : MonoBehaviour
         if (!mGameStarted)
             return;
 
-        /* LATERAL MOVEMENT */
-        Vector2 stickDirection = mMoveInput.action.ReadValue<Vector2>();
-        Vector3 characterDirection = new Vector3(stickDirection.x, 0, 0);
-        if (stickDirection.x > 0)
-        {
-            if (transform.position.x >= 2.5f)
-            {
-                MyUtils.Log("Right limit reached: " + transform.position.x);
-                return;
-            }
-        }
-        else if (stickDirection.x < 0)
-        {
-            if (transform.position.x <= -2.5f)
-            {
-                MyUtils.Log("Left limit reached: " + transform.position.x);
-                return;
-            }
-        }
-        transform.Translate(characterDirection * mRSO_LateralSpeed.Value * Time.deltaTime);
-
-        /* FORWARD MOVEMENT */
-        MoveForward();
-        ApplyGravity();
+        Move();
 
         if ((int)(transform.position.z) > mRSO_Distance.Value)
         {
@@ -125,164 +109,217 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    private bool IsGrounded()
-    {
-        Collider col = GetComponent<Collider>();
-        Vector3 origin = col.bounds.center;
-        float distance = col.bounds.extents.y + mGroundDistance;
 
-        return Physics.Raycast(origin, 
-            Vector3.down,
-            distance,
-            mGroundLayer,
-            QueryTriggerInteraction.Ignore);
+    /*
+     * BASE MOVEMENT
+     */
+
+    private void Move()
+    {
+        MyUtils.Log("Speed = " + mRSO_ForwardSpeed.Value, false);
+
+        // Z
+        transform.position += Vector3.forward * mRSO_ForwardSpeed.Value * Time.deltaTime;
+
+        // X
+
+        float horizontalInput = mMoveInput.action.ReadValue<Vector2>().x;
+        if ((horizontalInput > 0 && transform.position.x < 2.5f)
+            || (horizontalInput < 0 && transform.position.x > -2.5f))
+        {
+            Vector3 lateralDirection = new Vector3(horizontalInput, 0, 0);
+            transform.position += lateralDirection * mRSO_LateralSpeed.Value * Time.deltaTime;
+        }
     }
 
-    private void ApplyGravity()
+    /*
+     * MANAGE STATE
+     */
+
+    private void UpdateState(PlayerState newState)
     {
-        //MyUtils.Log("PlayerManager.ApplyGravity");
+        MyUtils.Log("PlayerManager.UpdateState " + mState + " => " + newState, false);
 
-        //if (IsGrounded())
-        //    return;
-
-        if (!mIsJumping)
+        if (mState == newState)
             return;
 
-        //MyUtils.Log("PlayerManager.ApplyGravity: NotGrounded");
-
-        float targetGravity = GetJumpGravity();
-        float extraGravity = targetGravity - Mathf.Abs(Physics.gravity.y);
-
-        if (extraGravity > 0f)
-            mRb.AddForce(Vector3.down * extraGravity, ForceMode.Acceleration);
-
+        StopState(mState);
+        mState = newState;
+        StartState(mState);
     }
 
-    private void MoveForward()
+    private void StopState(PlayerState state)
     {
-        Vector3 newVelocity = mRb.linearVelocity;
-        newVelocity.z = mRSO_ForwardSpeed.Value;
-        mRb.linearVelocity = newVelocity;
+        MyUtils.Log("PlayerManager.StopState " + state, false);
+
+        switch (state)
+        {
+            case PlayerState.Bouncing:
+                mBounceMotion.TryCancel();
+                break;
+            case PlayerState.Landing:
+                mLandMotion.TryCancel();
+                break;
+            case PlayerState.Jumping:
+                mJumpMotion.TryCancel();
+                break;
+            case PlayerState.Sliding:
+                mslideMotion.TryCancel();
+                break;
+        }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void StartState(PlayerState state)
     {
-        MyUtils.Log("MovementManager.OnCollisionEnter", false);
-        if (!mGameStarted)
-            return;
+        MyUtils.Log("PlayerManager.StartState " + state, false);
 
-        // Collision with something else than ground;
-        if (((1 << collision.gameObject.layer) & mGroundLayer) == 0)
-            return;
-
-        // Player is going up
-        if (mRb.linearVelocity.y > 0.1f)
-            return;
-
-        mIsJumping = false;
-        Bounce();
+        switch (state)
+        {
+            case PlayerState.Idle:
+                break;
+            case PlayerState.Bouncing:
+                Bounce();
+                break;
+            case PlayerState.Landing:
+                Land();
+                break;
+            case PlayerState.Jumping:
+                Jump();
+                break;
+            case PlayerState.Sliding:
+                Slide();
+                break;
+        }
     }
+
+
+    /*
+     * BOUNCE
+     * Bounce -> Landing
+     */
+
+    private void Bounce()
+    {
+        float bounceGround = transform.position.y;
+        float bouncePeak = transform.position.y + mBounceHeight;
+
+        float bounceDuration = mBounceDistance / mRSO_ForwardSpeed.Value;
+
+        // Bounce Anim
+        // Up & down
+        // Then calls landing
+        mBounceMotion = LSequence.Create()
+            .Append(LMotion.Create(bounceGround, bouncePeak, bounceDuration / 2)
+                .WithEase(mBounceEase)
+                .BindToPositionY(transform))
+            .Append(LMotion.Create(bouncePeak, bounceGround, bounceDuration / 2)
+                .WithEase(mBounceEase)
+                .WithOnComplete(() => UpdateState(PlayerState.Landing))
+                .BindToPositionY(transform))
+            .Run()
+            .AddTo(transform);
+    }
+
+    /*
+     * LANDING
+     */
+
+    private void Land()
+    {
+        Vector3 squashScale = new Vector3(
+            mScaleBase.x * (1f + mLandScale * 0.5f),
+            mScaleBase.y * (1f - mLandScale),
+            mScaleBase.z * (1f + mLandScale * 0.5f));
+
+
+        // Landing anim
+        // Squash in & out
+        // Then Bounce
+        mLandMotion = LSequence.Create()
+            .Append(LMotion.Create(mScaleBase, squashScale, mLandDuration / 2)
+                .WithEase(mLandEase)
+                .BindToLocalScale(transform))
+            .Append(LMotion.Create(squashScale, mScaleBase, mLandDuration / 2)
+                .WithEase(mLandEase)
+                .WithOnComplete(() => UpdateState(PlayerState.Bouncing))
+                .BindToLocalScale(transform))
+            .Run()
+            .AddTo(transform);
+    }
+
+    /*
+     * JUMP
+     */
+
+    private void OnJump(InputAction.CallbackContext ctx)
+    {
+        UpdateState(PlayerState.Jumping);
+    }
+
+    private void Jump()
+    {
+        float jumpStart = transform.position.y;
+        float jumpPeak = transform.position.y + mJumpHeight;
+
+        float jumpDuration = mJumpDistance / mRSO_ForwardSpeed.Value;
+
+        // Jump Anim
+        // Up & down
+        // Then calls landing
+        mBounceMotion = LSequence.Create()
+            .Append(LMotion.Create(jumpStart, jumpPeak, jumpDuration / 2)
+                .WithEase(mJumpEase)
+                .BindToPositionY(transform))
+            .Append(LMotion.Create(jumpPeak, mGroundY, jumpDuration / 2)
+                .WithEase(mJumpEase)
+                .WithOnComplete(() => UpdateState(PlayerState.Landing))
+                .BindToPositionY(transform))
+            .Run()
+            .AddTo(transform);
+    }
+
+    /*
+     * SLIDE
+     */
+
+    private void OnSlide(InputAction.CallbackContext ctx)
+    {
+        UpdateState(PlayerState.Sliding);
+    }
+
+    private void Slide()
+    {
+        float slideDuration = mSlideDistance / mRSO_ForwardSpeed.Value;
+        float slidePos = mSlideScale.y / 2;
+
+        // Landing slide
+        // Squash in & pos to ground then out
+        // Then Bounce
+        mLandMotion = LSequence.Create()
+            .Append(LMotion.Create(mScaleBase, mSlideScale, slideDuration / 2)
+                .WithEase(mSlideEase)
+                .BindToLocalScale(transform))
+            .Join(LMotion.Create(transform.position.y, slidePos, slideDuration / 2)
+                .BindToPositionY(transform))
+            .Append(LMotion.Create(mSlideScale, mScaleBase, slideDuration / 2)
+                .WithEase(mSlideEase)
+                .BindToLocalScale(transform))
+            .Join(LMotion.Create(slidePos, mGroundY, slideDuration / 2)
+                .WithOnComplete(() => UpdateState(PlayerState.Bouncing))
+                .BindToPositionY(transform))
+            .Run()
+            .AddTo(transform);
+    }
+
+
+    /*
+     * COLLISIONS
+     */
 
     private void OnTriggerEnter(Collider other)
     {
         MyUtils.Log("MovementManager.OnTriggerEnter: " + other.tag, false);
     }
 
-    private void Bounce()
-    {
-        if (mIsSliding || mIsJumping)
-            return;
 
-        //MyUtils.Log("Baby faut que ça bounce");
-        Vector3 newVelocity = mRb.linearVelocity;
-        newVelocity.y = mBounceForce;
-        mRb.linearVelocity = newVelocity;
-
-        PlayLandingAnimation();
-    }
-
-    private void OnJump(InputAction.CallbackContext ctx)
-    {
-        MyUtils.Log("PlayerManager.OnJump: " + mIsJumping);
-
-        if (!mIsJumping)
-        {
-            mIsJumping = true;
-            //MyUtils.Log("Position before jump: " + transform.position.z + " with speed " + mRSO_ForwardSpeed.Value);
-
-            float jumpGravity = GetJumpGravity();
-            float jumpForce = Mathf.Sqrt(2f * jumpGravity * mJumpHeight);
-
-            Vector3 newVelocity = mRb.linearVelocity;
-            newVelocity.y = jumpForce;
-            mRb.linearVelocity = newVelocity;
-        }
-    }
-
-    private float GetJumpGravity()
-    {
-        float speedRatio = Mathf.InverseLerp(3, 20, mRSO_ForwardSpeed.Value);
-
-        // Gravité qui augmente avec la vitesse
-        float currentGravity = Mathf.Lerp(
-            mGravityBase,
-            mGravityMax,
-            speedRatio
-        );
-
-        return currentGravity;
-    }
-
-    private async void PlayLandingAnimation()
-    {
-        //mCurrentAnim.TryCancel();
-
-        await LMotion.Create(mScaleBase, mScaleSquashed, mSquashDuration)
-            .WithEase(mSquashEase)
-            .BindToLocalScale(transform);
-
-        await LMotion.Create(mScaleSquashed, mScaleBase, mSquashDuration)
-            .WithEase(mSquashEase)
-            .BindToLocalScale(transform);
-    }
-
-
-
-    private void OnSlide(InputAction.CallbackContext ctx)
-    {
-        if (!mIsJumping)
-        {
-            Slide();
-        }
-    }
-
-    private float GetSlideDuration()
-    {
-        float speedRatio = Mathf.InverseLerp(pMinSpeed, pMaxForwardSpeed, mRSO_ForwardSpeed.Value);
-
-        return Mathf.Lerp(mSlideDurationBase, mSlideDurationMax, speedRatio);
-    }
-
-    private async void Slide()
-    {
-        mIsSliding = true;
-        float duration = GetSlideDuration();
-
-        await LMotion.Create(mScaleBase, mScaleSlide, duration / 2)
-            .WithEase(mSlideEase)
-            .BindToLocalScale(transform);
-
-        await LMotion.Create(mScaleSlide, mScaleBase, duration / 2)
-            .WithEase(mSlideEase)
-            .BindToLocalScale(transform);
-
-        mIsSliding = false;
-        Bounce();
-    }
-
-    private void OnStartGame()
-    {
-        mGameStarted = true;
-        Bounce();
-    }
 }
