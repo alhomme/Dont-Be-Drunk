@@ -6,32 +6,57 @@ public class SpeedManager : MonoBehaviour
     [SerializeField] private RSO_Speed mRSO_ForwardSpeed;
     [SerializeField] private RSO_Speed mRSO_LateralSpeed;
 
-    private float countTime;
+    [Header("RSE")]
+    [SerializeField] private RSE_StartGame mRSE_StartGame;
 
-    public float pMinSpeed = 3f;
-    public float pMaxForwardSpeed = 20f;
-    public float pMaxLateralSpeed = 10f;
+
+    [Header("Speed Values")]
+    [SerializeField] private float mMinSpeed = 3f;
+    [SerializeField] private float mMaxForwardSpeed = 20f;
+    [SerializeField] private float mIncFowardSpeed = 0.05f;
+    [SerializeField] private float mMaxLateralSpeed = 10f;
+    [SerializeField] private float mIncLateralSpeed = 0.02f;
+
+    private float countTime;
 
     private void OnEnable()
     {
         MyUtils.Log("SpeedManager.OnEnable", false);
 
-        mRSO_ForwardSpeed.Value = pMinSpeed;
-        mRSO_LateralSpeed.Value = pMinSpeed;
+        mRSE_StartGame.Event += OnStartGame;
+
+        mRSO_ForwardSpeed.Value = mMinSpeed;
+        mRSO_LateralSpeed.Value = mMinSpeed;
+        countTime = -1f;
+    }
+
+    private void OnDisable()
+    {
+        mRSE_StartGame.Event -= OnStartGame;
+        countTime = -1f;
+    }
+
+    private void OnStartGame()
+    {
+        mRSO_ForwardSpeed.Value = mMinSpeed;
+        mRSO_LateralSpeed.Value = mMinSpeed;
         countTime = 0f;
     }
 
     private void FixedUpdate()
     {
+        if (countTime < 0f)
+            return;
+
         countTime += Time.deltaTime;
 
         if (countTime >= 1f)
         {
-            if (mRSO_ForwardSpeed.Value < pMaxForwardSpeed)
-                mRSO_ForwardSpeed.Value += 0.05f;
+            if (mRSO_ForwardSpeed.Value < mMaxForwardSpeed)
+                mRSO_ForwardSpeed.Value += mIncFowardSpeed;
 
-            if (mRSO_LateralSpeed.Value < pMaxLateralSpeed)
-                mRSO_LateralSpeed.Value += 0.02f;
+            if (mRSO_LateralSpeed.Value < mMaxLateralSpeed)
+                mRSO_LateralSpeed.Value += mIncLateralSpeed;
 
             MyUtils.Log("SpeedManager: One second", false);
             MyUtils.Log("SpeedManager: Forward speed = " + mRSO_ForwardSpeed.Value, false);

@@ -201,9 +201,11 @@ public class ProcGenManager : MonoBehaviour
             string nameObstacle = mSSO_Obstacles.Value[i].mTag;
             for (int j = 0; j < nbObstacle; j++)
             {
-                Vector3 obstaclePosition = GenerateRandomPosition(mSSO_Obstacles.Value[i].mPrefab.transform.position.y);
-                //MyUtils.Log("Obstacle " + nameItem + " at position " + itemPosition);
                 GameObject obstacleObj = mItemsPool.GetPooledObjectByName(nameObstacle);
+
+                Vector3 obstaclePosition = GenerateRandomPosition(obstacleObj.transform.position.y);
+                //MyUtils.Log("Obstacle " + nameItem + " at position " + itemPosition);
+
                 obstacleObj.transform.position = obstaclePosition;
                 obstacleObj.SetActive(true);
             }
@@ -217,12 +219,11 @@ public class ProcGenManager : MonoBehaviour
         {
             GameObject alcoholItem = mAlcoholPool.GetPooledObject();
 
-            Vector3 itemPosition = GenerateRandomPosition(mSSO_ItemsAlcohol.Value.mPrefabs[0].transform.position.y);
+            Vector3 itemPosition = GenerateRandomPosition(alcoholItem.transform.position.y);
             //MyUtils.Log("Item " + alcoholItem.tag + " at position " + itemPosition);
 
             alcoholItem.transform.position = itemPosition;
             alcoholItem.SetActive(true);
-
         }
     }
 
@@ -235,10 +236,11 @@ public class ProcGenManager : MonoBehaviour
                 if (mChunkCount == mCollectiblesChunks[i][j])
                 {
                     string nameCollectible = mSSO_Collectibles.Value[i].mTag;
-
-                    Vector3 collectiblePosition = GenerateRandomPosition(mSSO_Collectibles.Value[i].mPrefab.transform.position.y);
-                    //MyUtils.Log("Collectible " + nameCollectible + " at position " + collectiblePosition);
                     GameObject collectibleObj = mItemsPool.GetPooledObjectByName(nameCollectible);
+
+                    Vector3 collectiblePosition = GenerateRandomPosition(collectibleObj.transform.position.y);
+                    //MyUtils.Log("Collectible " + nameCollectible + " at position " + collectiblePosition);
+                    
                     collectibleObj.transform.position = collectiblePosition;
                     collectibleObj.SetActive(true);
                 }

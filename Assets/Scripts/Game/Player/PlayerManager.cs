@@ -14,9 +14,12 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private RSO_Speed mRSO_ForwardSpeed;
     [SerializeField] private RSO_Speed mRSO_LateralSpeed;
     [SerializeField] private RSO_Distance mRSO_Distance;
+    [SerializeField] private RSO_Biome mRSO_Biome;
 
     [Header("RSE")]
     [SerializeField] private RSE_StartGame mRSE_StartGame;
+    [SerializeField] private RSE_GameOver mRSE_GameOver;
+    [SerializeField] private RSE_Collision mRSE_Collision;
 
     [Header("Ground")]
     [SerializeField] private float mGroundY = 0.5f;
@@ -45,10 +48,14 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private Ease mSlideEase = Ease.OutQuad;
     private MotionHandle mslideMotion;
 
+    [Header("Layers")]
+    [SerializeField] private LayerMask mObstacleLayer;
+
 
     private bool mGameStarted;
     private Vector3 mScaleBase;
 
+    private Vector3 mLastObstacleHit = Vector3.zero;
 
     private enum PlayerState
     {
@@ -77,8 +84,10 @@ public class PlayerManager : MonoBehaviour
         mJumpInput.action.performed += OnJump;
         mSlideInput.action.performed += OnSlide;
         mRSE_StartGame.Event += OnStartGame;
+        mRSE_GameOver.Event += OnGameOver;
 
         mRSO_Distance.Value = 0;
+        mRSO_Biome.Value = 0;
     }
 
     private void OnDisable()
@@ -86,6 +95,7 @@ public class PlayerManager : MonoBehaviour
         mJumpInput.action.performed -= OnJump;
         mSlideInput.action.performed -= OnSlide;
         mRSE_StartGame.Event -= OnStartGame;
+        mRSE_GameOver.Event -= OnGameOver;
 
         StopState(mState);
     }
@@ -106,6 +116,8 @@ public class PlayerManager : MonoBehaviour
         if ((int)(transform.position.z) > mRSO_Distance.Value)
         {
             mRSO_Distance.Value = (int)(transform.position.z);
+            if (mRSO_Distance.Value % 510 == 0)
+                mRSO_Biome.Value = Mathf.Min(mRSO_Biome.Value + 1, 3);
         }
     }
 
@@ -318,8 +330,25 @@ public class PlayerManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        MyUtils.Log("MovementManager.OnTriggerEnter: " + other.tag, false);
+        MyUtils.Log("MovementManager.OnTriggerEnter: " + other.gameObject.tag);
+
+        if (mLastObstacleHit != other.gameObject.transform.position)
+        {
+            mRSE_Collision.Dispatch(other.gameObject);
+
+            if ((mObstacleLayer & (1 << other.gameObject.layer)) > 0)
+            {
+                // Add blink effect
+            }
+        }
+
+        mLastObstacleHit = other.gameObject.transform.position;
     }
 
+    private void OnGameOver(GameOverType type)
+    {
+        mGameStarted = false;
+        UpdateState(PlayerState.Idle);
+    }
 
 }

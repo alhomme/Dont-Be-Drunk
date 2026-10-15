@@ -1,6 +1,8 @@
+using System;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -10,14 +12,28 @@ public class UIManager : MonoBehaviour
     [SerializeField] private RSE_GameOver mRSE_GameOver;
 
     [Header("RSO")]
+    [SerializeField] private RSO_InputSource mRSO_InputSource;
     [SerializeField] private RSO_Tutorial mRSO_Tutorial;
     [SerializeField] private RSO_Name mRSO_Name;
     [SerializeField] private RSO_Distance mRSO_Distance;
     [SerializeField] private RSO_Seed mRSO_Seed;
+    [SerializeField] private RSO_Life mRSO_Life;
+    [SerializeField] private RSO_Life mRSO_LifeMax;
 
     [Header("Elements")]
     [SerializeField] private TextMeshProUGUI mScoreText;
     [SerializeField] private TextMeshProUGUI mSeedText;
+    [SerializeField] private GameObject mLife;
+    [SerializeField] private Image[] mLifeImages;
+    [SerializeField] private Sprite mHeartFullSprite;
+    [SerializeField] private Sprite mHeartEmptySprite;
+
+    [Header("Game Over")]
+    [SerializeField] private GameObject mGameOverPanel;
+    [SerializeField] private TextMeshProUGUI mGameOverCause;
+    [SerializeField] private TextMeshProUGUI mGameOverScore;
+    [SerializeField] private TextMeshProUGUI mGameOverReturn;
+
 
 
     private void OnEnable()
@@ -25,8 +41,12 @@ public class UIManager : MonoBehaviour
         mRSE_StartGame.Event += OnStartGame;
         mRSE_GameOver.Event += OnGameOver;
 
+        mRSO_InputSource.OnChanged += OnInputSourceChange;
         mRSO_Distance.OnChanged += OnDistanceChanged;
         mRSO_Seed.OnChanged += OnSeedChanged;
+        mRSO_Life.OnChanged += OnLifeChanged;
+
+        DisableElements(true);
     }
 
     private void OnDisable()
@@ -34,9 +54,50 @@ public class UIManager : MonoBehaviour
         mRSE_StartGame.Event -= OnStartGame;
         mRSE_GameOver.Event -= OnGameOver;
 
+        mRSO_InputSource.OnChanged -= OnInputSourceChange;
         mRSO_Distance.OnChanged -= OnDistanceChanged;
         mRSO_Seed.OnChanged -= OnSeedChanged;
+        mRSO_Life.OnChanged -= OnLifeChanged;
     }
+
+    private void DisableElements(bool disableLife)
+    {
+        mGameOverPanel.SetActive(false);
+
+        mScoreText.enabled = false;
+        mSeedText.enabled = false;
+
+        if (disableLife)
+        {
+            mLife.SetActive(false);
+            for (int i = 0; i < mLifeImages.Length; i++)
+                mLifeImages[i].enabled = false;
+        }
+    }
+
+    private void OnInputSourceChange(InputSource source)
+    {
+        if (source == InputSource.Keyboard)
+        {
+            mGameOverReturn.text = "PRESS <sprite name=enter> TO RETURN TO MENU";
+        }
+        else if (source == InputSource.Gamepad)
+        {
+            mGameOverReturn.text = "PRESS <sprite name=xa> TO RETURN TO MENU";
+        }
+    }
+
+    private void OnStartGame()
+    {
+        mScoreText.enabled = true;
+        mSeedText.enabled = true;
+
+        mLife.SetActive(true);
+    }
+
+    /*
+     * GAME UI
+     */
 
     private void OnDistanceChanged(int distance)
     {
@@ -49,15 +110,46 @@ public class UIManager : MonoBehaviour
         mSeedText.text = seed.ToString();
     }
 
-    private void OnStartGame()
+    private void OnLifeChanged(int life)
     {
-        mScoreText.enabled = true;
-        mSeedText.enabled = true;
+        for (int i = 0; i < mRSO_LifeMax.Value; i++)
+        {
+            if (i < life)
+                mLifeImages[i].sprite = mHeartFullSprite;
+            else
+                mLifeImages[i].sprite = mHeartEmptySprite;
+
+            mLifeImages[i].enabled = true;
+        }
     }
+
+    /*
+     * GAME OVER
+     */
 
     private void OnGameOver(GameOverType goType)
     {
-        mScoreText.enabled = false;
-        mSeedText.enabled = false;
+        DisableElements(false);
+
+        switch (goType)
+        {
+            case GameOverType.Life:
+                mGameOverCause.text = "You got hurt !";
+                break;
+            case GameOverType.Alcohol:
+                mGameOverCause.text = "You passed out !";
+                break;
+            case GameOverType.Police:
+                mGameOverCause.text = "You got arrested !";
+                break;
+        }
+
+        // Check for high score & save
+
+        mGameOverScore.text = "Score: " + mScoreText.text + " m";
+
+        mGameOverPanel.SetActive(true);
     }
+
+
 }

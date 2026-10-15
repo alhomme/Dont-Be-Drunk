@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7269777190984658151}
   - component: {fileID: 3733292652043525690}
   - component: {fileID: 6804638663448062077}
+  - component: {fileID: 7062444553057767183}
   - component: {fileID: 8689991131529209226}
   m_Layer: 0
   m_Name: CharacterCube
@@ -113,6 +114,33 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &7062444553057767183
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2060697253741032292}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!114 &8689991131529209226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,7 +159,10 @@ MonoBehaviour:
   mRSO_ForwardSpeed: {fileID: 11400000, guid: fceba4e8940d7374ab18d72fd34ced04, type: 2}
   mRSO_LateralSpeed: {fileID: 11400000, guid: a4094b499f4562c499ecaecaf7724013, type: 2}
   mRSO_Distance: {fileID: 11400000, guid: a0c472b35d1e19a4f9f00ff6d7d2eb9a, type: 2}
+  mRSO_Biome: {fileID: 11400000, guid: 844770076e9f7de4e80ea0571f903b19, type: 2}
   mRSE_StartGame: {fileID: 11400000, guid: 434494670f3e3364cbc12424bff80265, type: 2}
+  mRSE_GameOver: {fileID: 11400000, guid: e1af525915569f346b82816d45e009d1, type: 2}
+  mRSE_Collision: {fileID: 11400000, guid: 3d5891bad81998d46bf757f41a806729, type: 2}
   mGroundY: 0.5
   mBounceHeight: 0.2
   mBounceDistance: 1
@@ -142,16 +173,9 @@ MonoBehaviour:
   mJumpHeight: 1.2
   mJumpDistance: 2.5
   mJumpEase: 3
-  mSlideScale: 0.6
+  mSlideScale: {x: 0.65, y: 0.25, z: 0.65}
   mSlideDistance: 3
   mSlideEase: 5
-  mGroundLayer:
+  mObstacleLayer:
     serializedVersion: 2
-    m_Bits: 8
-  mGroundDistance: 0.02
-  mGravityBase: 15
-  mGravityMax: 100
-  mScaleSlide: {x: 0.65, y: 0.25, z: 0.65}
-  pMinSpeed: 3
-  pMaxForwardSpeed: 20
-  pMaxLateralSpeed: 10
+    m_Bits: 0
