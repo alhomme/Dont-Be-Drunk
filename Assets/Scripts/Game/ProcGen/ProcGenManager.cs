@@ -18,12 +18,17 @@ public class ProcGenManager : MonoBehaviour
     [SerializeField] private AlcoholPool mAlcoholPool;
     [SerializeField] private BiomePool mBiomePool;
 
+    [Header("Layers")]
+    [SerializeField] private LayerMask mCollectibleLayer;
+    [SerializeField] private LayerMask mAlcoholLayer;
+
     [Header("RSO")]
     [SerializeField] private RSO_Seed mRSO_Seed;
     [SerializeField] private RSO_Distance mRSO_Distance;
 
     [Header("RSE")]
     [SerializeField] private RSE_StartGame mRSE_StartGame;
+    [SerializeField] private RSE_Collision mRSE_Collision;
 
     [Header("SSO")]
     [SerializeField] private SSO_Items mSSO_Obstacles;
@@ -49,6 +54,8 @@ public class ProcGenManager : MonoBehaviour
     private void OnEnable()
     {
         mRSO_Distance.OnChanged += OnDistanceChanged;
+        mRSE_Collision.Event += OnCollision;
+
         mRSO_Seed.Value = 0;
         mChunkPosition = -15f;
         mChunkCount = 0;
@@ -61,6 +68,7 @@ public class ProcGenManager : MonoBehaviour
         mGameRunning = false;
 
         mRSO_Distance.OnChanged -= OnDistanceChanged;
+        mRSE_Collision.Event -= OnCollision;
         mRSO_Seed.Value = 0;
 
         // Deactivate all active gameObjects from pools
@@ -222,6 +230,12 @@ public class ProcGenManager : MonoBehaviour
             Vector3 itemPosition = GenerateRandomPosition(alcoholItem.transform.position.y);
             //MyUtils.Log("Item " + alcoholItem.tag + " at position " + itemPosition);
 
+            // Random Y position between 0.5 (base) & 1
+            if (UnityEngine.Random.Range(0, 2) == 0)
+                itemPosition.y = 1f;
+            else
+                itemPosition.y = 0.25f;
+
             alcoholItem.transform.position = itemPosition;
             alcoholItem.SetActive(true);
         }
@@ -240,7 +254,13 @@ public class ProcGenManager : MonoBehaviour
 
                     Vector3 collectiblePosition = GenerateRandomPosition(collectibleObj.transform.position.y);
                     //MyUtils.Log("Collectible " + nameCollectible + " at position " + collectiblePosition);
-                    
+
+                    // Random Y position between 0.5 (base) & 1
+                    if (UnityEngine.Random.Range(0, 2) == 0)
+                        collectiblePosition.y = 1f;
+                    else
+                        collectiblePosition.y = 0.25f;
+
                     collectibleObj.transform.position = collectiblePosition;
                     collectibleObj.SetActive(true);
                 }
@@ -342,6 +362,17 @@ public class ProcGenManager : MonoBehaviour
             DeactivateChunk((float)distance - 30);
             // Generate new one
             GenerateChunk();
+        }
+    }
+
+    private void OnCollision(GameObject go)
+    {
+        MyUtils.Log("ProcGenManager.OnCollision");
+        // Deactivate other if alcohol or collectible
+        if ((mAlcoholLayer & (1 << go.layer)) > 0 || (mCollectibleLayer & (1 << go.layer)) > 0)
+        {
+            MyUtils.Log("Collision with Alcohol or Collectible -> Deactivate it");
+            go.SetActive(false);
         }
     }
 }

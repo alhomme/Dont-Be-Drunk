@@ -19,9 +19,3 @@ MonoBehaviour:
       m_Bits: 128
     mCountPerBiome: 0200000003000000040000000400000004000000i
     mPrefab: {fileID: 621584630249350254, guid: af9d1131c788d454fa7dae4544fa99d2, type: 3}
-  - mTag: Puke
-    mLayer:
-      serializedVersion: 2
-      m_Bits: 128
-    mCountPerBiome: 0100000002000000030000000400000004000000i
-    mPrefab: {fileID: 653635073869537575, guid: 8dda042ddf8242243983670bacbe7f17, type: 3}

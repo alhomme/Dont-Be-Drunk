@@ -3,6 +3,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 public class UIManager : MonoBehaviour
 {
@@ -16,13 +17,18 @@ public class UIManager : MonoBehaviour
     [SerializeField] private RSO_Tutorial mRSO_Tutorial;
     [SerializeField] private RSO_Name mRSO_Name;
     [SerializeField] private RSO_Distance mRSO_Distance;
+    [SerializeField] private RSO_Biome mRSO_Biome;
     [SerializeField] private RSO_Seed mRSO_Seed;
     [SerializeField] private RSO_Life mRSO_Life;
     [SerializeField] private RSO_Life mRSO_LifeMax;
+    [SerializeField] private RSO_AlcoholLevel mRSO_AlcoholLevel;
 
     [Header("Elements")]
+    [Header("Info")]
     [SerializeField] private TextMeshProUGUI mScoreText;
     [SerializeField] private TextMeshProUGUI mSeedText;
+
+    [Header("Life")]
     [SerializeField] private GameObject mLife;
     [SerializeField] private Image[] mLifeImages;
     [SerializeField] private Sprite mHeartFullSprite;
@@ -34,6 +40,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI mGameOverScore;
     [SerializeField] private TextMeshProUGUI mGameOverReturn;
 
+    [Header("Alcohol Bar")]
+    [SerializeField] private GameObject mAlcoholGo;
+    [SerializeField] private Slider mAlcoholBar;
+
 
 
     private void OnEnable()
@@ -43,8 +53,10 @@ public class UIManager : MonoBehaviour
 
         mRSO_InputSource.OnChanged += OnInputSourceChange;
         mRSO_Distance.OnChanged += OnDistanceChanged;
+        mRSO_Biome.OnChanged += OnBiomeChanged;
         mRSO_Seed.OnChanged += OnSeedChanged;
         mRSO_Life.OnChanged += OnLifeChanged;
+        mRSO_AlcoholLevel.OnChanged += OnAlcoholLevelChanged;
 
         DisableElements(true);
     }
@@ -56,8 +68,10 @@ public class UIManager : MonoBehaviour
 
         mRSO_InputSource.OnChanged -= OnInputSourceChange;
         mRSO_Distance.OnChanged -= OnDistanceChanged;
+        mRSO_Biome.OnChanged -= OnBiomeChanged;
         mRSO_Seed.OnChanged -= OnSeedChanged;
         mRSO_Life.OnChanged -= OnLifeChanged;
+        mRSO_AlcoholLevel.OnChanged -= OnAlcoholLevelChanged;
     }
 
     private void DisableElements(bool disableLife)
@@ -72,6 +86,8 @@ public class UIManager : MonoBehaviour
             mLife.SetActive(false);
             for (int i = 0; i < mLifeImages.Length; i++)
                 mLifeImages[i].enabled = false;
+
+            mAlcoholGo.SetActive(false);
         }
     }
 
@@ -93,6 +109,8 @@ public class UIManager : MonoBehaviour
         mSeedText.enabled = true;
 
         mLife.SetActive(true);
+
+        mAlcoholGo.SetActive(true);
     }
 
     /*
@@ -120,6 +138,58 @@ public class UIManager : MonoBehaviour
                 mLifeImages[i].sprite = mHeartEmptySprite;
 
             mLifeImages[i].enabled = true;
+        }
+    }
+
+    private void OnAlcoholLevelChanged(int alcoholLevel)
+    {
+        MyUtils.Log("UI Manager. OnAlcoholLevelChanged: " + alcoholLevel);
+
+        float value = (float)alcoholLevel / 100;
+        mAlcoholBar.value = value;
+
+        OnBiomeChanged(mRSO_Biome.Value);
+    }
+
+    private void OnBiomeChanged(int biome)
+    {
+        // Update Alcohol bar color
+        Image sliderFill = mAlcoholBar.fillRect.GetComponent<Image>();
+        float value = mAlcoholBar.value;
+
+        switch (mRSO_Biome.Value)
+        {
+            case 0:
+                if (value <= 0.25f)
+                    sliderFill.color = Color.green;
+                else if (value <= 0.5f)
+                    sliderFill.color = Color.yellow;
+                else if (value <= 0.75f)
+                    sliderFill.color = Color.orange;
+                else
+                    sliderFill.color = Color.red;
+                break;
+
+            case 1:
+                if (value <= 0.25f)
+                    sliderFill.color = Color.yellow;
+                else if (value <= 0.5f)
+                    sliderFill.color = Color.orange;
+                else
+                    sliderFill.color = Color.red;
+                break;
+
+            case 2:
+                if (value <= 0.25f)
+                    sliderFill.color = Color.orange;
+                else
+                    sliderFill.color = Color.red;
+                break;
+
+            case 3:
+                sliderFill.color = Color.red;
+                break;
+
         }
     }
 

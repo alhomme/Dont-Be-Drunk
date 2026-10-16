@@ -56,9 +56,12 @@ public class LifeManager : MonoBehaviour
 
         if ((mCollectibleLayer & (1 << go.layer)) > 0)
         {
-            MyUtils.Log("Collision with Collectible");
-            if (mRSO_Life.Value < mRSO_LifeMax.Value)
-                mRSO_Life.Value++;
+            if (go.tag == "Heart")
+            {
+                MyUtils.Log("Collision with Collectible Heart");
+                if (mRSO_Life.Value < mRSO_LifeMax.Value)
+                    mRSO_Life.Value++;
+            }
             return;
         }
     }

@@ -60,7 +60,8 @@ public class BiomePool : MonoBehaviour
         {
             for (int j = 0; j < mPooledObjects[i].Count; j++)
             {
-                if (mPooledObjects[i][j].transform.position.z <= positionZ)
+                if (mPooledObjects[i][j].transform.position.z <= positionZ
+                    && mPooledObjects[i][j].activeInHierarchy)
                 {
                     objs.Add(mPooledObjects[i][j]);
                 }

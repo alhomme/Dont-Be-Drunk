@@ -72,7 +72,8 @@ public class AlcoholPool : MonoBehaviour
 
         for (int i = 0; i < mPooledObjects.Count; i++)
         {
-            if (mPooledObjects[i].transform.position.z <= positionZ)
+            if (mPooledObjects[i].transform.position.z <= positionZ
+                && mPooledObjects[i].activeInHierarchy)
             {
                 objs.Add(mPooledObjects[i]);
             }

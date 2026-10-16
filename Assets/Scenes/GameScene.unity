@@ -420,9 +420,16 @@ MonoBehaviour:
   mItemsPool: {fileID: 171681642}
   mAlcoholPool: {fileID: 220501454}
   mBiomePool: {fileID: 1692661129}
+  mCollectibleLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  mAlcoholLayer:
+    serializedVersion: 2
+    m_Bits: 256
   mRSO_Seed: {fileID: 11400000, guid: f9f3771198be8b84283304388529686c, type: 2}
   mRSO_Distance: {fileID: 11400000, guid: a0c472b35d1e19a4f9f00ff6d7d2eb9a, type: 2}
   mRSE_StartGame: {fileID: 11400000, guid: 434494670f3e3364cbc12424bff80265, type: 2}
+  mRSE_Collision: {fileID: 11400000, guid: 3d5891bad81998d46bf757f41a806729, type: 2}
   mSSO_Obstacles: {fileID: 11400000, guid: b28bfc0f22bc11340a713b781de307a5, type: 2}
   mSSO_Collectibles: {fileID: 11400000, guid: dd802ec39dcc3a24fa010ce53c00fcca, type: 2}
   mSSO_ItemsAlcohol: {fileID: 11400000, guid: 5db1dc005c61e2b4a8377abe366b7fc3, type: 2}

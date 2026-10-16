@@ -22,8 +22,8 @@ MonoBehaviour:
     - Wine
     - Tequila
     mPrefabs:
-    - {fileID: 4626892566372901586, guid: 89cce4686fe289749a2316300685dbb4, type: 3}
-    - {fileID: 550852978454777671, guid: 4a42da4dae4af1a46b0f08b0d9f1f7e7, type: 3}
-    - {fileID: 7504472191982676423, guid: d8764221bc5bd0144ae1aad5623df5b8, type: 3}
+    - {fileID: 8398601021662225049, guid: 67ebebe313b325b49a8c33c825bdabe5, type: 3}
+    - {fileID: 6965821067544458296, guid: a610c52de611e244dbe9b6a800cf193b, type: 3}
+    - {fileID: 7215856734752065869, guid: 1242a88922ac6d34da67517f4c97626b, type: 3}
     mRates: 3c0000005a00000064000000i
     mEffects: 010000000200000003000000i
