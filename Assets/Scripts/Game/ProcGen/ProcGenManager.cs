@@ -43,7 +43,6 @@ public class ProcGenManager : MonoBehaviour
     private int mChunkBiome;
     private int mChunkBiomeAsset;
     private int mChunkCount;
-    private bool mGameRunning = false;
 
     private List<List<int>> mCollectiblesChunks;
 
@@ -65,7 +64,6 @@ public class ProcGenManager : MonoBehaviour
     private void OnDisable()
     {
         MyUtils.Log("ProcGenManager.OnDisable", false);
-        mGameRunning = false;
 
         mRSO_Distance.OnChanged -= OnDistanceChanged;
         mRSE_Collision.Event -= OnCollision;
@@ -93,6 +91,7 @@ public class ProcGenManager : MonoBehaviour
         // Generate base chunks     
         // Generate empty road behind player starting position
         GenerateRoad();
+        GenerateBiome();
         mChunkPosition += 30f;
 
         // Generate next chunks
@@ -105,7 +104,7 @@ public class ProcGenManager : MonoBehaviour
 
 
         // Instantiate Character
-        Vector3 characterPosition = new Vector3(0f, 0.5f, 0f);
+        Vector3 characterPosition = new Vector3(0f, 0.5f, -5f);
         mCharacterObj = Instantiate(mCharacterPrefab, transform);
         mCharacterObj.transform.position = characterPosition;
 
@@ -119,13 +118,6 @@ public class ProcGenManager : MonoBehaviour
 
         // Start Game
         mRSE_StartGame.Dispatch();
-        mGameRunning = true;
-    }
-
-    private void FixedUpdate()
-    {
-        if (!mGameRunning)
-            return;
     }
 
     private void GenerateChunk()
@@ -146,15 +138,7 @@ public class ProcGenManager : MonoBehaviour
         GenerateAlcohol();
 
         // Generate environment
-        GameObject leftBiome = mBiomePool.GetPooledObjectByIdx(mChunkBiomeAsset);
-        Vector3 leftBiomePosition = new Vector3(-6f, 0, mChunkPosition);
-        leftBiome.transform.position = leftBiomePosition;
-        leftBiome.SetActive(true);
-
-        GameObject rightBiome = mBiomePool.GetPooledObjectByIdx(mChunkBiomeAsset);
-        Vector3 rightBiomePosition = new Vector3(6f, 0, mChunkPosition);
-        rightBiome.transform.position = rightBiomePosition;
-        rightBiome.SetActive(true);
+        GenerateBiome();
 
         // Increase chunk position
         UpdateChunkPosition();
@@ -199,6 +183,19 @@ public class ProcGenManager : MonoBehaviour
         Vector3 roadPosition = new Vector3(0, 0, mChunkPosition);
         roadChunk.transform.position = roadPosition;
         roadChunk.SetActive(true);
+    }
+
+    private void GenerateBiome()
+    {
+        GameObject leftBiome = mBiomePool.GetPooledObjectByIdx(mChunkBiomeAsset);
+        Vector3 leftBiomePosition = new Vector3(-6f, 0, mChunkPosition);
+        leftBiome.transform.position = leftBiomePosition;
+        leftBiome.SetActive(true);
+
+        GameObject rightBiome = mBiomePool.GetPooledObjectByIdx(mChunkBiomeAsset);
+        Vector3 rightBiomePosition = new Vector3(6f, 0, mChunkPosition);
+        rightBiome.transform.position = rightBiomePosition;
+        rightBiome.SetActive(true);
     }
 
     private void GenerateObstacles()

@@ -165,13 +165,13 @@ MonoBehaviour:
   mRSE_Collision: {fileID: 11400000, guid: 3d5891bad81998d46bf757f41a806729, type: 2}
   mGroundY: 0.5
   mBounceHeight: 0.2
-  mBounceDistance: 1
+  mBounceDistance: 1.5
   mBounceEase: 3
   mLandScale: 0.2
   mLandDuration: 0.15
   mLandEase: 5
   mJumpHeight: 1.2
-  mJumpDistance: 2.5
+  mJumpDistance: 3
   mJumpEase: 3
   mSlideScale: {x: 0.65, y: 0.25, z: 0.65}
   mSlideDistance: 3

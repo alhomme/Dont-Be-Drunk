@@ -1,9 +1,11 @@
+using LitMotion;
+using LitMotion.Extensions;
 using System;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.UI;
-using static UnityEngine.Rendering.DebugUI;
 
 public class UIManager : MonoBehaviour
 {
@@ -120,7 +122,6 @@ public class UIManager : MonoBehaviour
     private void OnDistanceChanged(int distance)
     {
         mScoreText.text = distance.ToString();
-        // Add anim
     }
 
     private void OnSeedChanged(int seed)
@@ -146,9 +147,13 @@ public class UIManager : MonoBehaviour
         MyUtils.Log("UI Manager. OnAlcoholLevelChanged: " + alcoholLevel);
 
         float value = (float)alcoholLevel / 100;
-        mAlcoholBar.value = value;
+        //mAlcoholBar.value = value;
 
-        OnBiomeChanged(mRSO_Biome.Value);
+        LMotion.Create(mAlcoholBar.value, value, 0.5f)
+            .WithEase(Ease.OutQuad)
+            .WithOnComplete(() => OnBiomeChanged(mRSO_Biome.Value))
+            .Bind(x => mAlcoholBar.value = x)
+            .AddTo(mAlcoholBar);
     }
 
     private void OnBiomeChanged(int biome)

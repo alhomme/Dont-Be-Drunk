@@ -46,7 +46,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private Vector3 mSlideScale = new Vector3(0.65f, 0.25f, 0.65f);
     [SerializeField] private float mSlideDistance = 3f;
     [SerializeField] private Ease mSlideEase = Ease.OutQuad;
-    private MotionHandle mslideMotion;
+    private MotionHandle mSlideMotion;
 
     [Header("Layers")]
     [SerializeField] private LayerMask mObstacleLayer;
@@ -176,7 +176,7 @@ public class PlayerManager : MonoBehaviour
                 mJumpMotion.TryCancel();
                 break;
             case PlayerState.Sliding:
-                mslideMotion.TryCancel();
+                mSlideMotion.TryCancel();
                 break;
         }
     }
@@ -190,13 +190,13 @@ public class PlayerManager : MonoBehaviour
             case PlayerState.Idle:
                 break;
             case PlayerState.Bouncing:
-                Bounce();
+                BounceUp();
                 break;
             case PlayerState.Landing:
-                Land();
+                LandDown();
                 break;
             case PlayerState.Jumping:
-                Jump();
+                JumpUp();
                 break;
             case PlayerState.Sliding:
                 Slide();
@@ -210,25 +210,45 @@ public class PlayerManager : MonoBehaviour
      * Bounce -> Landing
      */
 
-    private void Bounce()
+    private void BounceUp()
     {
         float bounceGround = transform.position.y;
         float bouncePeak = transform.position.y + mBounceHeight;
 
         float bounceDuration = mBounceDistance / mRSO_ForwardSpeed.Value;
 
+
         // Bounce Anim
         // Up & down
         // Then calls landing
-        mBounceMotion = LSequence.Create()
-            .Append(LMotion.Create(bounceGround, bouncePeak, bounceDuration / 2)
-                .WithEase(mBounceEase)
-                .BindToPositionY(transform))
-            .Append(LMotion.Create(bouncePeak, bounceGround, bounceDuration / 2)
-                .WithEase(mBounceEase)
-                .WithOnComplete(() => UpdateState(PlayerState.Landing))
-                .BindToPositionY(transform))
-            .Run()
+
+        mBounceMotion = LMotion.Create(bounceGround, bouncePeak, bounceDuration / 2)
+            .WithEase(mBounceEase)
+            .WithOnComplete(() => BounceDown(bounceGround, bouncePeak, bounceDuration))
+            .BindToPositionY(transform)
+            .AddTo(transform);
+
+
+        /*  mBounceMotion = LSequence.Create()
+              .Append(LMotion.Create(bounceGround, bouncePeak, bounceDuration / 2)
+                  .WithEase(mBounceEase)
+                  .BindToPositionY(transform))
+              .Append(LMotion.Create(bouncePeak, bounceGround, bounceDuration / 2)
+                  .WithEase(mBounceEase)
+                  .WithOnComplete(() => UpdateState(PlayerState.Landing))
+                  .BindToPositionY(transform))
+              .Run()
+              .AddTo(transform);
+
+          return;*/
+    }
+
+    private void BounceDown(float bounceGround, float bouncePeak, float duration)
+    {
+        mBounceMotion = LMotion.Create(bouncePeak, bounceGround, duration / 2)
+            .WithEase(mBounceEase)
+            .WithOnComplete(() => UpdateState(PlayerState.Landing))
+            .BindToPositionY(transform)
             .AddTo(transform);
     }
 
@@ -236,7 +256,7 @@ public class PlayerManager : MonoBehaviour
      * LANDING
      */
 
-    private void Land()
+    private void LandDown()
     {
         Vector3 squashScale = new Vector3(
             mScaleBase.x * (1f + mLandScale * 0.5f),
@@ -247,15 +267,31 @@ public class PlayerManager : MonoBehaviour
         // Landing anim
         // Squash in & out
         // Then Bounce
-        mLandMotion = LSequence.Create()
-            .Append(LMotion.Create(mScaleBase, squashScale, mLandDuration / 2)
-                .WithEase(mLandEase)
-                .BindToLocalScale(transform))
-            .Append(LMotion.Create(squashScale, mScaleBase, mLandDuration / 2)
-                .WithEase(mLandEase)
-                .WithOnComplete(() => UpdateState(PlayerState.Bouncing))
-                .BindToLocalScale(transform))
-            .Run()
+
+        mLandMotion = LMotion.Create(mScaleBase, squashScale, mLandDuration / 2)
+            .WithOnComplete(() => LandUp(squashScale))
+            .BindToLocalScale(transform)
+            .AddTo(transform);
+
+        /*  mLandMotion = LSequence.Create()
+              .Append(LMotion.Create(mScaleBase, squashScale, mLandDuration / 2)
+                  .WithEase(mLandEase)
+                  .BindToLocalScale(transform))
+              .Append(LMotion.Create(squashScale, mScaleBase, mLandDuration / 2)
+                  .WithEase(mLandEase)
+                  .WithOnComplete(() => UpdateState(PlayerState.Bouncing))
+                  .BindToLocalScale(transform))
+              .Run()
+              .AddTo(transform);
+        */
+    }
+
+    private void LandUp(Vector3 squashScale)
+    {
+        mLandMotion = LMotion.Create(squashScale, mScaleBase, mLandDuration / 2)
+            .WithEase(mLandEase)
+            .WithOnComplete(() => UpdateState(PlayerState.Bouncing))
+            .BindToLocalScale(transform)
             .AddTo(transform);
     }
 
@@ -268,7 +304,7 @@ public class PlayerManager : MonoBehaviour
         UpdateState(PlayerState.Jumping);
     }
 
-    private void Jump()
+    private void JumpUp()
     {
         float jumpStart = transform.position.y;
         float jumpPeak = transform.position.y + mJumpHeight;
@@ -278,15 +314,31 @@ public class PlayerManager : MonoBehaviour
         // Jump Anim
         // Up & down
         // Then calls landing
-        mBounceMotion = LSequence.Create()
-            .Append(LMotion.Create(jumpStart, jumpPeak, jumpDuration / 2)
-                .WithEase(mJumpEase)
-                .BindToPositionY(transform))
-            .Append(LMotion.Create(jumpPeak, mGroundY, jumpDuration / 2)
-                .WithEase(mJumpEase)
-                .WithOnComplete(() => UpdateState(PlayerState.Landing))
-                .BindToPositionY(transform))
-            .Run()
+
+        mJumpMotion = LMotion.Create(jumpStart, jumpPeak, jumpDuration / 2)
+            .WithEase(mJumpEase)
+            .WithOnComplete(() => JumpDown(jumpPeak, jumpDuration))
+            .BindToPositionY(transform)
+            .AddTo(transform);
+
+        /*   mJumpMotion = LSequence.Create()
+               .Append(LMotion.Create(jumpStart, jumpPeak, jumpDuration / 2)
+                   .WithEase(mJumpEase)
+                   .BindToPositionY(transform))
+               .Append(LMotion.Create(jumpPeak, mGroundY, jumpDuration / 2)
+                   .WithEase(mJumpEase)
+                   .WithOnComplete(() => UpdateState(PlayerState.Landing))
+                   .BindToPositionY(transform))
+               .Run()
+               .AddTo(transform);*/
+    }
+
+    private void JumpDown(float jumpPeak, float jumpDuration)
+    {
+        mJumpMotion = LMotion.Create(jumpPeak, mGroundY, jumpDuration / 2)
+            .WithEase(mJumpEase)
+            .WithOnComplete(() => UpdateState(PlayerState.Landing))
+            .BindToPositionY(transform)
             .AddTo(transform);
     }
 
@@ -307,7 +359,7 @@ public class PlayerManager : MonoBehaviour
         // Landing slide
         // Squash in & pos to ground then out
         // Then Bounce
-        mLandMotion = LSequence.Create()
+        mSlideMotion = LSequence.Create()
             .Append(LMotion.Create(mScaleBase, mSlideScale, slideDuration / 2)
                 .WithEase(mSlideEase)
                 .BindToLocalScale(transform))
