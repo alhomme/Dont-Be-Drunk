@@ -45,5 +45,12 @@ public class AlcoholManager : MonoBehaviour
                 }
             }
         }
+        else if (go.tag == "Stand")
+        {
+            mRSO_AlcoholLevel.Value -= 20;
+            if (mRSO_AlcoholLevel.Value < 0)
+                mRSO_AlcoholLevel.Value = 0;
+            MyUtils.Log("New Alcohol value: " + mRSO_AlcoholLevel.Value);
+        }
     }
 }

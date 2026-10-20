@@ -936,7 +936,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6e5f77b83f2cd3a4e912bc281a45f878, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c4b7be52cf4220b46a6f26ce85e9e399, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1090,7 +1090,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6e5f77b83f2cd3a4e912bc281a45f878, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6cede8a7be82033478fd0277849c6f56, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1435,7 +1435,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6e5f77b83f2cd3a4e912bc281a45f878, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6cede8a7be82033478fd0277849c6f56, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2153,7 +2153,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6e5f77b83f2cd3a4e912bc281a45f878, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c4b7be52cf4220b46a6f26ce85e9e399, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2228,7 +2228,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6e5f77b83f2cd3a4e912bc281a45f878, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6cede8a7be82033478fd0277849c6f56, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2303,7 +2303,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6e5f77b83f2cd3a4e912bc281a45f878, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c4b7be52cf4220b46a6f26ce85e9e399, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2463,8 +2463,8 @@ MonoBehaviour:
   - {fileID: 1641938801}
   - {fileID: 1121124188}
   - {fileID: 885112484}
-  mHeartFullSprite: {fileID: 21300000, guid: 6e5f77b83f2cd3a4e912bc281a45f878, type: 3}
-  mHeartEmptySprite: {fileID: 21300000, guid: 32bebd32886ea3740ac527e04795ae31, type: 3}
+  mHeartFullSprite: {fileID: 21300000, guid: c4b7be52cf4220b46a6f26ce85e9e399, type: 3}
+  mHeartEmptySprite: {fileID: 21300000, guid: 6cede8a7be82033478fd0277849c6f56, type: 3}
   mGameOverPanel: {fileID: 1099635714}
   mGameOverCause: {fileID: 1734314124}
   mGameOverScore: {fileID: 1308515799}

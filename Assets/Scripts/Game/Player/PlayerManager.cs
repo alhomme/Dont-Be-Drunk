@@ -21,9 +21,6 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private RSE_GameOver mRSE_GameOver;
     [SerializeField] private RSE_Collision mRSE_Collision;
 
-    [Header("Ground")]
-    [SerializeField] private float mGroundY = 0.5f;
-
     [Header("Bounce")]
     [SerializeField] private float mBounceHeight = 0.2f;
     [SerializeField] private float mBounceDistance = 1.5f;
@@ -48,13 +45,20 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private Ease mSlideEase = Ease.OutQuad;
     private MotionHandle mSlideMotion;
 
-    [Header("Layers")]
+    [Header("Elements")]
+    [SerializeField] private float mGroundY = 0.5f;
     [SerializeField] private LayerMask mObstacleLayer;
+    [SerializeField] private LayerMask mAlcoholLayer;
+    [SerializeField] private LayerMask mCollectibleLayer;
+    [SerializeField] private ParticleSystem mObstacleParticle;
+    [SerializeField] private ParticleSystem mAlcoholParticle;
+    [SerializeField] private ParticleSystem mHeartParticle;
+    [SerializeField] private ParticleSystem mStrengthParticle;
 
 
     private bool mGameStarted;
     private Vector3 mScaleBase;
-
+    private Material mPlayerMaterial;
     private Vector3 mLastObstacleHit = Vector3.zero;
 
     private enum PlayerState
@@ -77,6 +81,8 @@ public class PlayerManager : MonoBehaviour
         mGameStarted = false;
 
         mState = PlayerState.Idle;
+
+        mPlayerMaterial = GetComponent<MeshRenderer>().material;
     }
 
     private void OnEnable()
@@ -388,9 +394,30 @@ public class PlayerManager : MonoBehaviour
         {
             mRSE_Collision.Dispatch(other.gameObject);
 
+
             if ((mObstacleLayer & (1 << other.gameObject.layer)) > 0)
             {
+                Color materialColor = mPlayerMaterial.color;
+
                 // Add blink effect
+                LMotion.Create(materialColor, Color.white, 0.1f)
+                    .WithEase(Ease.OutQuad)
+                    .WithLoops(4, LoopType.Yoyo)
+                    .Bind(color => { mPlayerMaterial.color = color; })
+                    .AddTo(gameObject);
+
+                mObstacleParticle.Play();
+                if (other.tag == "Stand")
+                    mStrengthParticle.Play();
+            }
+            else if ((mAlcoholLayer & (1 << other.gameObject.layer)) > 0)
+            {
+                mAlcoholParticle.Play();
+            }
+            else if ((mCollectibleLayer & (1 << other.gameObject.layer)) > 0)
+            {
+                if (other.tag == "Heart")
+                    mHeartParticle.Play();
             }
         }
 

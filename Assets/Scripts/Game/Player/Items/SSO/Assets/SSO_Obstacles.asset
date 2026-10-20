@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SSO_Obstacles
   m_EditorClassIdentifier: Assembly-CSharp::SSO_Items
   mValue:
-  - mTag: Hotdog
+  - mTag: Stand
     mLayer:
       serializedVersion: 2
       m_Bits: 64

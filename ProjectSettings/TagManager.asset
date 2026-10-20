@@ -9,12 +9,12 @@ TagManager:
   - Pedestrian
   - Movers
   - Police
-  - Hotdog
   - Heart
   - Puke
   - Beer
   - Wine
   - Tequila
+  - Stand
   layers:
   - Default
   - TransparentFX
