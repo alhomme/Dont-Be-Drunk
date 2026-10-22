@@ -166,6 +166,7 @@ MonoBehaviour:
   mRSO_Biome: {fileID: 11400000, guid: 844770076e9f7de4e80ea0571f903b19, type: 2}
   mRSE_StartGame: {fileID: 11400000, guid: 434494670f3e3364cbc12424bff80265, type: 2}
   mRSE_GameOver: {fileID: 11400000, guid: e1af525915569f346b82816d45e009d1, type: 2}
+  mRSE_Pause: {fileID: 11400000, guid: 8092c54747fa4f94db3ede2d6efe3074, type: 2}
   mRSE_Collision: {fileID: 11400000, guid: 3d5891bad81998d46bf757f41a806729, type: 2}
   mBounceHeight: 0.2
   mBounceDistance: 1.5

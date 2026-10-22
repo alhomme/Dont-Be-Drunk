@@ -26,11 +26,28 @@ public class MainMenuManager : MonoBehaviour
     private void OnEnable()
     {
         // Play Menu music
-    }
 
-    private void OnDisable()
-    {
-        
+        // Retrieve best scores
+        string goldName = PlayerPrefs.GetString("GoldName", "");
+        if (goldName != "")
+        {
+            int goldScore = PlayerPrefs.GetInt("GoldScore", 0);
+            mGoldScore.text = goldName + " " + goldScore.ToString() + "m";
+
+            string silverName = PlayerPrefs.GetString("SilverName", "");
+            if (silverName != "")
+            {
+                int silverScore = PlayerPrefs.GetInt("SilverScore", 0);
+                mSilverScore.text = silverName + " " + silverScore.ToString() + "m";
+
+                string bronzeName = PlayerPrefs.GetString("BronzeName", "");
+                if (bronzeName != "")
+                {
+                    int bronzeScore = PlayerPrefs.GetInt("BronzeScore", 0);
+                    mBronzeScore.text = bronzeName + " " + bronzeScore.ToString() + "m";
+                }
+            }
+        }
     }
 
     public void OnStartClicked()
@@ -38,10 +55,15 @@ public class MainMenuManager : MonoBehaviour
         MyUtils.Log("OnStartClicked: " + mNameInputField.text);
 
         // Store Name in RSO
+        if (mNameInputField.text == "")
+            mRSO_Name.Value = "Inconnu";
+        else
+            mRSO_Name.Value = mNameInputField.text;
 
         // Stop Menu music
 
         // RSE LoadScene
+        mRSE_LoadScene.Dispatch("GameScene");
     }
 
     public void OnTutorialClicked()

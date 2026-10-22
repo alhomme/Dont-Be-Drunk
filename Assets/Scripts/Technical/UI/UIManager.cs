@@ -4,6 +4,8 @@ using System;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 using UnityEngine.UI;
 
@@ -13,6 +15,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private RSE_StartTutorial mRSE_StartTutorial;
     [SerializeField] private RSE_StartGame mRSE_StartGame;
     [SerializeField] private RSE_GameOver mRSE_GameOver;
+    [SerializeField] private RSE_Pause mRSE_Pause;
+    [SerializeField] private RSE_LoadScene mRSE_LoadScene;
 
     [Header("RSO")]
     [SerializeField] private RSO_InputSource mRSO_InputSource;
@@ -25,7 +29,13 @@ public class UIManager : MonoBehaviour
     [SerializeField] private RSO_Life mRSO_LifeMax;
     [SerializeField] private RSO_AlcoholLevel mRSO_AlcoholLevel;
 
+    [Header("Inputs")]
+    [SerializeField] private InputActionReference mPauseInput;
+    [SerializeField] private InputActionReference mReturnInput;
+
     [Header("Elements")]
+    [SerializeField] private EventSystem mEventSystem;
+
     [Header("Info")]
     [SerializeField] private TextMeshProUGUI mScoreText;
     [SerializeField] private TextMeshProUGUI mSeedText;
@@ -36,17 +46,22 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Sprite mHeartFullSprite;
     [SerializeField] private Sprite mHeartEmptySprite;
 
+    [Header("Pause")]
+    [SerializeField] private GameObject mPausePanel;
+    [SerializeField] private GameObject mPauseCloseButton;
+
     [Header("Game Over")]
     [SerializeField] private GameObject mGameOverPanel;
     [SerializeField] private TextMeshProUGUI mGameOverCause;
     [SerializeField] private TextMeshProUGUI mGameOverScore;
-    [SerializeField] private TextMeshProUGUI mGameOverReturn;
+    [SerializeField] private Image mGameOverMedal;
+    [SerializeField] private Sprite[] mMedalSprites;
+    [SerializeField] private GameObject mGameOverQuit;
 
     [Header("Alcohol Bar")]
     [SerializeField] private GameObject mAlcoholGo;
     [SerializeField] private Slider mAlcoholBar;
     [SerializeField] private Image mSliderFill;
-
 
 
     private void OnEnable()
@@ -66,6 +81,9 @@ public class UIManager : MonoBehaviour
 
     private void OnDisable()
     {
+        mPauseInput.action.performed -= OnPauseInput;
+        mReturnInput.action.performed -= OnReturnInput;
+
         mRSE_StartGame.Event -= OnStartGame;
         mRSE_GameOver.Event -= OnGameOver;
 
@@ -79,7 +97,14 @@ public class UIManager : MonoBehaviour
 
     private void DisableElements(bool disableLife)
     {
+        mPauseInput.action.performed -= OnPauseInput;
+        mReturnInput.action.performed -= OnReturnInput;
+
+        mEventSystem.SetSelectedGameObject(null);
+        mEventSystem.enabled = false;
         mGameOverPanel.SetActive(false);
+
+        mPausePanel.SetActive(false);
 
         mScoreText.enabled = false;
         mSeedText.enabled = false;
@@ -96,14 +121,7 @@ public class UIManager : MonoBehaviour
 
     private void OnInputSourceChange(InputSource source)
     {
-        if (source == InputSource.Keyboard)
-        {
-            mGameOverReturn.text = "<sprite name=enter> QUITTER";
-        }
-        else if (source == InputSource.Gamepad)
-        {
-            mGameOverReturn.text = "<sprite name=xa> QUITTER";
-        }
+
     }
 
     private void OnStartGame()
@@ -114,6 +132,9 @@ public class UIManager : MonoBehaviour
         mLife.SetActive(true);
 
         mAlcoholGo.SetActive(true);
+
+        mPauseInput.action.performed += OnPauseInput;
+        mReturnInput.action.performed += OnReturnInput;
     }
 
     /*
@@ -222,10 +243,78 @@ public class UIManager : MonoBehaviour
         }
 
         // Check for high score & save
-
         mGameOverScore.text = "Score: " + mScoreText.text + " m";
+        UpdateBestScores();
 
+        // Show Panel & activate Button
         mGameOverPanel.SetActive(true);
+        mEventSystem.enabled = true;
+        mEventSystem.SetSelectedGameObject(mGameOverQuit);
+    }
+
+    private void UpdateBestScores()
+    {
+        string goldName = PlayerPrefs.GetString("GoldName", "");
+        int goldScore = PlayerPrefs.GetInt("GoldScore", 0);
+        string silverName = PlayerPrefs.GetString("SilverName", "");
+        int silverScore = PlayerPrefs.GetInt("SilverScore", 0);
+        string bronzeName = PlayerPrefs.GetString("BronzeName", "");
+        int bronzeScore = PlayerPrefs.GetInt("BronzeScore", 0);
+
+        if (mRSO_Distance.Value > goldScore)
+        {
+            bronzeName = silverName;
+            bronzeScore = silverScore;
+
+            silverName = goldName;
+            silverScore = goldScore;
+
+            goldName = mRSO_Name.Value;
+            goldScore = mRSO_Distance.Value;
+
+            // Image = medal gold
+            mGameOverMedal.sprite = mMedalSprites[0];
+            mGameOverMedal.enabled = true;
+        }
+        else if (mRSO_Distance.Value > silverScore)
+        {
+            bronzeName = silverName;
+            bronzeScore = silverScore;
+
+            silverName = mRSO_Name.Value;
+            silverScore = mRSO_Distance.Value;
+
+            // Image = medal silver
+            mGameOverMedal.sprite = mMedalSprites[1];
+            mGameOverMedal.enabled = true;
+        }
+        else if (mRSO_Distance.Value > bronzeScore)
+        {
+            bronzeName = mRSO_Name.Value;
+            bronzeScore = mRSO_Distance.Value;
+
+            // Image = medal bronze
+            mGameOverMedal.sprite = mMedalSprites[2];
+            mGameOverMedal.enabled = true;
+        }
+        else
+        {
+            // No Image of medal
+            mGameOverMedal.enabled = false;
+        }
+
+        PlayerPrefs.SetString("GoldName", goldName);
+        PlayerPrefs.SetInt("GoldScore", goldScore);
+        PlayerPrefs.SetString("SilverName", silverName);
+        PlayerPrefs.SetInt("SilverScore", silverScore);
+        PlayerPrefs.SetString("BronzeName", bronzeName);
+        PlayerPrefs.SetInt("BronzeScore", bronzeScore);
+    }
+
+    public void ReturnToMainMenu()
+    {
+        DisableElements(true);
+        mRSE_LoadScene.Dispatch("MainMenuScene");
     }
 
 
@@ -233,4 +322,45 @@ public class UIManager : MonoBehaviour
      * PAUSE
      */
 
+    private void OnPauseInput(InputAction.CallbackContext ctx)
+    {
+        MyUtils.Log("UIManager.OnOpenMenu: " + mPausePanel.activeInHierarchy);
+
+        if (mPausePanel.activeInHierarchy)
+        {
+            ClosePauseMenu();
+        }
+        else
+        {
+            OpenPauseMenu();
+        }
+    }
+
+    private void OnReturnInput(InputAction.CallbackContext ctx)
+    {
+        MyUtils.Log("UIManager.OnCloseMenu");
+
+        if (mPausePanel.activeInHierarchy)
+        {
+            ClosePauseMenu();
+        }
+    }
+
+    private void OpenPauseMenu()
+    {
+        mPausePanel.SetActive(true);
+        mEventSystem.SetSelectedGameObject(mPauseCloseButton);
+        mEventSystem.enabled = true;
+
+        mRSE_Pause.Dispatch(true);
+    }
+
+    public void ClosePauseMenu()
+    {
+        mEventSystem.SetSelectedGameObject(null);
+        mEventSystem.enabled = false;
+        mPausePanel.SetActive(false);
+
+        mRSE_Pause.Dispatch(false);
+    }
 }

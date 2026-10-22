@@ -19,31 +19,28 @@ public class PlayerManager : MonoBehaviour
     [Header("RSE")]
     [SerializeField] private RSE_StartGame mRSE_StartGame;
     [SerializeField] private RSE_GameOver mRSE_GameOver;
+    [SerializeField] private RSE_Pause mRSE_Pause;
     [SerializeField] private RSE_Collision mRSE_Collision;
 
     [Header("Bounce")]
     [SerializeField] private float mBounceHeight = 0.2f;
     [SerializeField] private float mBounceDistance = 1.5f;
     [SerializeField] private Ease mBounceEase = Ease.InOutSine;
-    private MotionHandle mBounceMotion;
 
     [Header("Landing")]
     [SerializeField] private float mLandScale = 0.2f;
     [SerializeField] private float mLandDuration = 0.15f;
     [SerializeField] private Ease mLandEase = Ease.OutQuad;
-    private MotionHandle mLandMotion;
 
     [Header("Jump")]
     [SerializeField] private float mJumpHeight = 1.2f;
     [SerializeField] private float mJumpDistance = 3f;
     [SerializeField] private Ease mJumpEase = Ease.InOutSine;
-    private MotionHandle mJumpMotion;
 
     [Header("Slide")]
     [SerializeField] private Vector3 mSlideScale = new Vector3(0.65f, 0.25f, 0.65f);
     [SerializeField] private float mSlideDistance = 3f;
     [SerializeField] private Ease mSlideEase = Ease.OutQuad;
-    private MotionHandle mSlideMotion;
 
     [Header("Elements")]
     [SerializeField] private float mGroundY = 0.5f;
@@ -57,6 +54,8 @@ public class PlayerManager : MonoBehaviour
 
 
     private bool mGameStarted;
+    private MotionHandle mCurrentMotion;
+    private MotionHandle mBlinkMotion;
     private Vector3 mScaleBase;
     private Material mPlayerMaterial;
     private Vector3 mLastObstacleHit = Vector3.zero;
@@ -91,6 +90,7 @@ public class PlayerManager : MonoBehaviour
         mSlideInput.action.performed += OnSlide;
         mRSE_StartGame.Event += OnStartGame;
         mRSE_GameOver.Event += OnGameOver;
+        mRSE_Pause.Event += OnPause;
 
         mRSO_Distance.Value = 0;
         mRSO_Biome.Value = 0;
@@ -102,14 +102,34 @@ public class PlayerManager : MonoBehaviour
         mSlideInput.action.performed -= OnSlide;
         mRSE_StartGame.Event -= OnStartGame;
         mRSE_GameOver.Event -= OnGameOver;
+        mRSE_Pause.Event -= OnPause;
 
-        StopState(mState);
+        StopState();
     }
 
     private void OnStartGame()
     {
         mGameStarted = true;
         UpdateState(PlayerState.Bouncing);
+    }
+
+    private void OnPause(bool pauseStatus)
+    {
+
+        if (pauseStatus)
+        {
+            PauseState(0f);
+            if (mBlinkMotion.IsActive())
+                mBlinkMotion.PlaybackSpeed = 0f;
+        }
+        else
+        {
+            PauseState(1f);
+            if (mBlinkMotion.IsActive())
+                mBlinkMotion.PlaybackSpeed = 1f;
+        }
+
+        mGameStarted = !pauseStatus;
     }
 
     private void FixedUpdate()
@@ -161,30 +181,16 @@ public class PlayerManager : MonoBehaviour
         if (mState == newState)
             return;
 
-        StopState(mState);
+        StopState();
         mState = newState;
         StartState(mState);
     }
 
-    private void StopState(PlayerState state)
+    private void StopState()
     {
-        MyUtils.Log("PlayerManager.StopState " + state, false);
+        MyUtils.Log("PlayerManager.StopState", false);
 
-        switch (state)
-        {
-            case PlayerState.Bouncing:
-                mBounceMotion.TryCancel();
-                break;
-            case PlayerState.Landing:
-                mLandMotion.TryCancel();
-                break;
-            case PlayerState.Jumping:
-                mJumpMotion.TryCancel();
-                break;
-            case PlayerState.Sliding:
-                mSlideMotion.TryCancel();
-                break;
-        }
+        mCurrentMotion.TryCancel();
     }
 
     private void StartState(PlayerState state)
@@ -193,8 +199,6 @@ public class PlayerManager : MonoBehaviour
 
         switch (state)
         {
-            case PlayerState.Idle:
-                break;
             case PlayerState.Bouncing:
                 BounceUp();
                 break;
@@ -208,6 +212,14 @@ public class PlayerManager : MonoBehaviour
                 Slide();
                 break;
         }
+    }
+
+    private void PauseState(float resume)
+    {
+        MyUtils.Log("PlayerManager.StartState", false);
+
+        if (mCurrentMotion.IsActive())
+            mCurrentMotion.PlaybackSpeed = resume;
     }
 
 
@@ -228,7 +240,7 @@ public class PlayerManager : MonoBehaviour
         // Up & down
         // Then calls landing
 
-        mBounceMotion = LMotion.Create(bounceGround, bouncePeak, bounceDuration / 2)
+        mCurrentMotion = LMotion.Create(bounceGround, bouncePeak, bounceDuration / 2)
             .WithEase(mBounceEase)
             .WithOnComplete(() => BounceDown(bounceGround, bouncePeak, bounceDuration))
             .BindToPositionY(transform)
@@ -251,7 +263,7 @@ public class PlayerManager : MonoBehaviour
 
     private void BounceDown(float bounceGround, float bouncePeak, float duration)
     {
-        mBounceMotion = LMotion.Create(bouncePeak, bounceGround, duration / 2)
+        mCurrentMotion = LMotion.Create(bouncePeak, bounceGround, duration / 2)
             .WithEase(mBounceEase)
             .WithOnComplete(() => UpdateState(PlayerState.Landing))
             .BindToPositionY(transform)
@@ -274,7 +286,7 @@ public class PlayerManager : MonoBehaviour
         // Squash in & out
         // Then Bounce
 
-        mLandMotion = LMotion.Create(mScaleBase, squashScale, mLandDuration / 2)
+        mCurrentMotion = LMotion.Create(mScaleBase, squashScale, mLandDuration / 2)
             .WithOnComplete(() => LandUp(squashScale))
             .BindToLocalScale(transform)
             .AddTo(transform);
@@ -294,7 +306,7 @@ public class PlayerManager : MonoBehaviour
 
     private void LandUp(Vector3 squashScale)
     {
-        mLandMotion = LMotion.Create(squashScale, mScaleBase, mLandDuration / 2)
+        mCurrentMotion = LMotion.Create(squashScale, mScaleBase, mLandDuration / 2)
             .WithEase(mLandEase)
             .WithOnComplete(() => UpdateState(PlayerState.Bouncing))
             .BindToLocalScale(transform)
@@ -307,7 +319,8 @@ public class PlayerManager : MonoBehaviour
 
     private void OnJump(InputAction.CallbackContext ctx)
     {
-        UpdateState(PlayerState.Jumping);
+        if (mGameStarted)
+            UpdateState(PlayerState.Jumping);
     }
 
     private void JumpUp()
@@ -321,7 +334,7 @@ public class PlayerManager : MonoBehaviour
         // Up & down
         // Then calls landing
 
-        mJumpMotion = LMotion.Create(jumpStart, jumpPeak, jumpDuration / 2)
+        mCurrentMotion = LMotion.Create(jumpStart, jumpPeak, jumpDuration / 2)
             .WithEase(mJumpEase)
             .WithOnComplete(() => JumpDown(jumpPeak, jumpDuration))
             .BindToPositionY(transform)
@@ -341,7 +354,7 @@ public class PlayerManager : MonoBehaviour
 
     private void JumpDown(float jumpPeak, float jumpDuration)
     {
-        mJumpMotion = LMotion.Create(jumpPeak, mGroundY, jumpDuration / 2)
+        mCurrentMotion = LMotion.Create(jumpPeak, mGroundY, jumpDuration / 2)
             .WithEase(mJumpEase)
             .WithOnComplete(() => UpdateState(PlayerState.Landing))
             .BindToPositionY(transform)
@@ -354,7 +367,8 @@ public class PlayerManager : MonoBehaviour
 
     private void OnSlide(InputAction.CallbackContext ctx)
     {
-        UpdateState(PlayerState.Sliding);
+        if (mGameStarted)
+            UpdateState(PlayerState.Sliding);
     }
 
     private void Slide()
@@ -365,7 +379,7 @@ public class PlayerManager : MonoBehaviour
         // Landing slide
         // Squash in & pos to ground then out
         // Then Bounce
-        mSlideMotion = LSequence.Create()
+        mCurrentMotion = LSequence.Create()
             .Append(LMotion.Create(mScaleBase, mSlideScale, slideDuration / 2)
                 .WithEase(mSlideEase)
                 .BindToLocalScale(transform))
@@ -392,15 +406,12 @@ public class PlayerManager : MonoBehaviour
 
         if (mLastObstacleHit != other.gameObject.transform.position)
         {
-            mRSE_Collision.Dispatch(other.gameObject);
-
-
             if ((mObstacleLayer & (1 << other.gameObject.layer)) > 0)
             {
                 Color baseColor = mPlayerMaterial.color;
 
                 // Add blink effect
-                LMotion.Create(1f, 0f, 0.1f)
+                mBlinkMotion = LMotion.Create(1f, 0f, 0.1f)
                     .WithEase(Ease.OutQuad)
                     .WithLoops(6, LoopType.Yoyo)
                     .Bind(a => {
@@ -423,6 +434,8 @@ public class PlayerManager : MonoBehaviour
                 if (other.tag == "Heart")
                     mHeartParticle.Play();
             }
+
+            mRSE_Collision.Dispatch(other.gameObject);
         }
 
         mLastObstacleHit = other.gameObject.transform.position;
@@ -431,6 +444,7 @@ public class PlayerManager : MonoBehaviour
     private void OnGameOver(GameOverType type)
     {
         mGameStarted = false;
+        mBlinkMotion.TryCancel();
         UpdateState(PlayerState.Idle);
     }
 
