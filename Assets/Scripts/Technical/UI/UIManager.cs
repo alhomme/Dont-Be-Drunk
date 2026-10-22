@@ -45,6 +45,7 @@ public class UIManager : MonoBehaviour
     [Header("Alcohol Bar")]
     [SerializeField] private GameObject mAlcoholGo;
     [SerializeField] private Slider mAlcoholBar;
+    [SerializeField] private Image mSliderFill;
 
 
 
@@ -97,11 +98,11 @@ public class UIManager : MonoBehaviour
     {
         if (source == InputSource.Keyboard)
         {
-            mGameOverReturn.text = "PRESS <sprite name=enter> TO RETURN TO MENU";
+            mGameOverReturn.text = "<sprite name=enter> QUITTER";
         }
         else if (source == InputSource.Gamepad)
         {
-            mGameOverReturn.text = "PRESS <sprite name=xa> TO RETURN TO MENU";
+            mGameOverReturn.text = "<sprite name=xa> QUITTER";
         }
     }
 
@@ -151,48 +152,49 @@ public class UIManager : MonoBehaviour
 
         LMotion.Create(mAlcoholBar.value, value, 0.5f)
             .WithEase(Ease.OutQuad)
-            .WithOnComplete(() => OnBiomeChanged(mRSO_Biome.Value))
-            .Bind(x => mAlcoholBar.value = x)
+            .Bind(x => {
+                OnBiomeChanged(mRSO_Biome.Value);
+                mAlcoholBar.value = x;
+                })
             .AddTo(mAlcoholBar);
     }
 
     private void OnBiomeChanged(int biome)
     {
         // Update Alcohol bar color
-        Image sliderFill = mAlcoholBar.fillRect.GetComponent<Image>();
         float value = mAlcoholBar.value;
 
         switch (mRSO_Biome.Value)
         {
             case 0:
                 if (value <= 0.25f)
-                    sliderFill.color = Color.green;
+                    mSliderFill.color = Color.green;
                 else if (value <= 0.5f)
-                    sliderFill.color = Color.yellow;
+                    mSliderFill.color = Color.yellow;
                 else if (value <= 0.75f)
-                    sliderFill.color = Color.orange;
+                    mSliderFill.color = Color.orange;
                 else
-                    sliderFill.color = Color.red;
+                    mSliderFill.color = Color.red;
                 break;
 
             case 1:
                 if (value <= 0.25f)
-                    sliderFill.color = Color.yellow;
+                    mSliderFill.color = Color.yellow;
                 else if (value <= 0.5f)
-                    sliderFill.color = Color.orange;
+                    mSliderFill.color = Color.orange;
                 else
-                    sliderFill.color = Color.red;
+                    mSliderFill.color = Color.red;
                 break;
 
             case 2:
                 if (value <= 0.25f)
-                    sliderFill.color = Color.orange;
+                    mSliderFill.color = Color.orange;
                 else
-                    sliderFill.color = Color.red;
+                    mSliderFill.color = Color.red;
                 break;
 
             case 3:
-                sliderFill.color = Color.red;
+                mSliderFill.color = Color.red;
                 break;
 
         }
@@ -209,13 +211,13 @@ public class UIManager : MonoBehaviour
         switch (goType)
         {
             case GameOverType.Life:
-                mGameOverCause.text = "You got hurt !";
+                mGameOverCause.text = "Tu t'es blessé !";
                 break;
             case GameOverType.Alcohol:
-                mGameOverCause.text = "You passed out !";
+                mGameOverCause.text = "Tu t'es évanoui !";
                 break;
             case GameOverType.Police:
-                mGameOverCause.text = "You got arrested !";
+                mGameOverCause.text = "Tu t'es fait arrêter !";
                 break;
         }
 
@@ -226,5 +228,9 @@ public class UIManager : MonoBehaviour
         mGameOverPanel.SetActive(true);
     }
 
+
+    /*
+     * PAUSE
+     */
 
 }

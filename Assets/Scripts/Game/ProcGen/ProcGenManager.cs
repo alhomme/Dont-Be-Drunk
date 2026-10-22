@@ -114,7 +114,7 @@ public class ProcGenManager : MonoBehaviour
 
 
         // Everything is ready
-        // Check for tutorial
+        // Check for tutorial here ?
 
         // Start Game
         mRSE_StartGame.Dispatch();

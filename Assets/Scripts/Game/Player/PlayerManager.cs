@@ -397,13 +397,17 @@ public class PlayerManager : MonoBehaviour
 
             if ((mObstacleLayer & (1 << other.gameObject.layer)) > 0)
             {
-                Color materialColor = mPlayerMaterial.color;
+                Color baseColor = mPlayerMaterial.color;
 
                 // Add blink effect
-                LMotion.Create(materialColor, Color.white, 0.1f)
+                LMotion.Create(1f, 0f, 0.1f)
                     .WithEase(Ease.OutQuad)
-                    .WithLoops(4, LoopType.Yoyo)
-                    .Bind(color => { mPlayerMaterial.color = color; })
+                    .WithLoops(6, LoopType.Yoyo)
+                    .Bind(a => {
+                        Color c = baseColor;
+                        c.a = a;
+                        mPlayerMaterial.color = c;
+                    })
                     .AddTo(gameObject);
 
                 mObstacleParticle.Play();
