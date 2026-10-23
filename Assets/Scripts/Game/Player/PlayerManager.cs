@@ -143,8 +143,14 @@ public class PlayerManager : MonoBehaviour
         {
             mRSO_Distance.Value = (int)(transform.position.z);
             if (mRSO_Distance.Value % 510 == 0)
+            {
+                MyUtils.Log("On rentre ici");
                 mRSO_Biome.Value = Mathf.Min(mRSO_Biome.Value + 1, 3);
+            }
         }
+
+       // if ((int)(transform.position.z) == 0)
+       //     mRSO_Biome.Value = 0;
     }
 
 

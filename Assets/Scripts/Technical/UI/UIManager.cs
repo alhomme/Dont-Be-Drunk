@@ -1,6 +1,7 @@
 using LitMotion;
 using LitMotion.Extensions;
 using System;
+using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -8,6 +9,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 public class UIManager : MonoBehaviour
 {
@@ -46,22 +48,36 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Sprite mHeartFullSprite;
     [SerializeField] private Sprite mHeartEmptySprite;
 
+    [Header("Biome Title")]
+    [SerializeField] private GameObject mBiomeTitleObject;
+    [SerializeField] private string[] mBiomeTitles;
+
     [Header("Pause")]
     [SerializeField] private GameObject mPausePanel;
     [SerializeField] private GameObject mPauseCloseButton;
 
     [Header("Game Over")]
     [SerializeField] private GameObject mGameOverPanel;
+    [SerializeField] private Image mGameOverIcon;
+    [SerializeField] private Dictionary<string, Sprite> mGameOverIconSprites;
     [SerializeField] private TextMeshProUGUI mGameOverCause;
     [SerializeField] private TextMeshProUGUI mGameOverScore;
     [SerializeField] private Image mGameOverMedal;
     [SerializeField] private Sprite[] mMedalSprites;
     [SerializeField] private GameObject mGameOverQuit;
+    [SerializeField] private GameObject mGameOverPrisonCell;
 
     [Header("Alcohol Bar")]
     [SerializeField] private GameObject mAlcoholGo;
     [SerializeField] private Slider mAlcoholBar;
     [SerializeField] private Image mSliderFill;
+
+    private Color[,] mFillColors = {
+        { Color.green, Color.yellow, Color.orange, Color.red },
+        { Color.yellow, Color.orange, Color.red, Color.red },
+        { Color.orange, Color.red, Color.red, Color.red },
+        { Color.red, Color.red, Color.red, Color.red }
+    };
 
 
     private void OnEnable()
@@ -76,13 +92,12 @@ public class UIManager : MonoBehaviour
         mRSO_Life.OnChanged += OnLifeChanged;
         mRSO_AlcoholLevel.OnChanged += OnAlcoholLevelChanged;
 
-        DisableElements(true);
+        DisableAll();
     }
 
     private void OnDisable()
     {
-        mPauseInput.action.performed -= OnPauseInput;
-        mReturnInput.action.performed -= OnReturnInput;
+        DisableAll();
 
         mRSE_StartGame.Event -= OnStartGame;
         mRSE_GameOver.Event -= OnGameOver;
@@ -95,28 +110,15 @@ public class UIManager : MonoBehaviour
         mRSO_AlcoholLevel.OnChanged -= OnAlcoholLevelChanged;
     }
 
-    private void DisableElements(bool disableLife)
+    private void DisableAll()
     {
-        mPauseInput.action.performed -= OnPauseInput;
-        mReturnInput.action.performed -= OnReturnInput;
-
-        mEventSystem.SetSelectedGameObject(null);
-        mEventSystem.enabled = false;
-        mGameOverPanel.SetActive(false);
-
-        mPausePanel.SetActive(false);
-
-        mScoreText.enabled = false;
-        mSeedText.enabled = false;
-
-        if (disableLife)
-        {
-            mLife.SetActive(false);
-            for (int i = 0; i < mLifeImages.Length; i++)
-                mLifeImages[i].enabled = false;
-
-            mAlcoholGo.SetActive(false);
-        }
+        DisableScore();
+        DisableSeed();
+        DisableLife();
+        DisableAlcoholBar();
+        DisableGameOver();
+        DisableGoPolice();
+        DisablePause();
     }
 
     private void OnInputSourceChange(InputSource source)
@@ -146,9 +148,19 @@ public class UIManager : MonoBehaviour
         mScoreText.text = distance.ToString();
     }
 
+    private void DisableScore()
+    {
+        mScoreText.enabled = false;
+    }
+
     private void OnSeedChanged(int seed)
     {
         mSeedText.text = seed.ToString();
+    }
+
+    private void DisableSeed()
+    {
+        mSeedText.enabled = false;
     }
 
     private void OnLifeChanged(int life)
@@ -164,6 +176,13 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    private void DisableLife()
+    {
+        mLife.SetActive(false);
+        for (int i = 0; i < mLifeImages.Length; i++)
+            mLifeImages[i].enabled = false;
+    }
+
     private void OnAlcoholLevelChanged(int alcoholLevel)
     {
         MyUtils.Log("UI Manager. OnAlcoholLevelChanged: " + alcoholLevel);
@@ -174,51 +193,50 @@ public class UIManager : MonoBehaviour
         LMotion.Create(mAlcoholBar.value, value, 0.5f)
             .WithEase(Ease.OutQuad)
             .Bind(x => {
-                OnBiomeChanged(mRSO_Biome.Value);
+                UpdateAlcoholBarColor(x);
                 mAlcoholBar.value = x;
                 })
             .AddTo(mAlcoholBar);
     }
 
+    private void DisableAlcoholBar()
+    {
+        mAlcoholGo.SetActive(false);
+    }
+
+    private void UpdateAlcoholBarColor(float value)
+    {
+        int idx = 3;
+        if (value <= 0.25f)
+            idx = 0;
+        else if (value <= 0.5f)
+            idx = 1;
+        else if (value <= 0.75f)
+            idx = 2;
+
+        mSliderFill.color = mFillColors[mRSO_Biome.Value, idx];
+    }
+
     private void OnBiomeChanged(int biome)
     {
-        // Update Alcohol bar color
-        float value = mAlcoholBar.value;
+       MyUtils.Log("UIManager.OnBiomeChanged");
 
-        switch (mRSO_Biome.Value)
-        {
-            case 0:
-                if (value <= 0.25f)
-                    mSliderFill.color = Color.green;
-                else if (value <= 0.5f)
-                    mSliderFill.color = Color.yellow;
-                else if (value <= 0.75f)
-                    mSliderFill.color = Color.orange;
-                else
-                    mSliderFill.color = Color.red;
-                break;
+        UpdateAlcoholBarColor(mAlcoholBar.value);
 
-            case 1:
-                if (value <= 0.25f)
-                    mSliderFill.color = Color.yellow;
-                else if (value <= 0.5f)
-                    mSliderFill.color = Color.orange;
-                else
-                    mSliderFill.color = Color.red;
-                break;
+        mBiomeTitleObject.GetComponent<TextMeshProUGUI>().text = mBiomeTitles[biome];
 
-            case 2:
-                if (value <= 0.25f)
-                    mSliderFill.color = Color.orange;
-                else
-                    mSliderFill.color = Color.red;
-                break;
+        Vector3 basePosition = mBiomeTitleObject.transform.localPosition;
 
-            case 3:
-                mSliderFill.color = Color.red;
-                break;
-
-        }
+        LSequence.Create()
+            .Append(LMotion.Create(mBiomeTitleObject.transform.localPosition.x, 0f, 1f)
+                .WithEase(Ease.OutBack)
+                .BindToLocalPositionX(mBiomeTitleObject.transform))
+            .AppendInterval(1f)
+            .Append(LMotion.Create(0f, mBiomeTitleObject.transform.localPosition.x * -1f, 1f)
+                .WithEase(Ease.InBack)
+                .WithOnComplete(() => mBiomeTitleObject.transform.localPosition = basePosition)
+                .BindToLocalPositionX(mBiomeTitleObject.transform))
+            .Run();
     }
 
     /*
@@ -227,29 +245,83 @@ public class UIManager : MonoBehaviour
 
     private void OnGameOver(GameOverType goType)
     {
-        DisableElements(false);
-
-        switch (goType)
-        {
-            case GameOverType.Life:
-                mGameOverCause.text = "Tu t'es blessé !";
-                break;
-            case GameOverType.Alcohol:
-                mGameOverCause.text = "Tu t'es évanoui !";
-                break;
-            case GameOverType.Police:
-                mGameOverCause.text = "Tu t'es fait arrêter !";
-                break;
-        }
+        DisableScore();
+        DisablePause();
 
         // Check for high score & save
         mGameOverScore.text = "Score: " + mScoreText.text + " m";
         UpdateBestScores();
 
+        switch (goType)
+        {
+            case GameOverType.Life:
+                GameOverLife();
+                break;
+            case GameOverType.Alcohol:
+                GameOverAlcohol();
+                break;
+            case GameOverType.Police:
+                GameOverPolice();
+                break;
+        }
+
+    }
+
+    private void ShowGameOverPanel()
+    {
         // Show Panel & activate Button
         mGameOverPanel.SetActive(true);
         mEventSystem.enabled = true;
         mEventSystem.SetSelectedGameObject(mGameOverQuit);
+
+        float curX = mGameOverPanel.transform.localPosition.x;
+        LMotion.Create(curX, 0, 1f)
+            .WithEase(Ease.OutElastic)
+            .BindToLocalPositionX(mGameOverPanel.transform)
+            .AddTo(mGameOverPanel);
+    }
+
+    private void DisableGameOver()
+    {
+        mEventSystem.SetSelectedGameObject(null);
+        mEventSystem.enabled = false;
+        mGameOverPanel.SetActive(false);
+    }
+
+    private void GameOverPolice()
+    {
+        mGameOverCause.text = "Tu t'es fait arrêter !";
+        mGameOverIcon.sprite = mGameOverIconSprites["Police"];
+
+        float curY = mGameOverPrisonCell.transform.localPosition.y;
+
+        mGameOverPrisonCell.SetActive(true);
+
+        LMotion.Create(curY, 0, 1f)
+            .WithOnComplete(() => ShowGameOverPanel())
+            .BindToLocalPositionY(mGameOverPrisonCell.transform)
+            .AddTo(mGameOverPrisonCell);   
+    }
+
+    private void DisableGoPolice()
+    {
+        mGameOverPrisonCell.SetActive(false);
+    }
+
+    private void GameOverLife()
+    {
+        mGameOverCause.text = "Tu t'es blessé !";
+        mGameOverIcon.sprite = mGameOverIconSprites["Life"];
+
+        ShowGameOverPanel();
+    }
+
+    private void GameOverAlcohol()
+    {
+        mGameOverCause.text = "Tu t'es évanoui !";
+        mGameOverIcon.sprite = mGameOverIconSprites["Alcohol"];
+
+        ShowGameOverPanel();
     }
 
     private void UpdateBestScores()
@@ -313,7 +385,7 @@ public class UIManager : MonoBehaviour
 
     public void ReturnToMainMenu()
     {
-        DisableElements(true);
+        DisableAll();
         mRSE_LoadScene.Dispatch("MainMenuScene");
     }
 
@@ -362,5 +434,14 @@ public class UIManager : MonoBehaviour
         mPausePanel.SetActive(false);
 
         mRSE_Pause.Dispatch(false);
+    }
+
+    private void DisablePause()
+    {
+        mPauseInput.action.performed -= OnPauseInput;
+        mReturnInput.action.performed -= OnReturnInput;
+
+        mEventSystem.SetSelectedGameObject(null);
+        mEventSystem.enabled = false;
     }
 }
