@@ -268,6 +268,7 @@ GameObject:
   - component: {fileID: 242987202}
   - component: {fileID: 242987201}
   - component: {fileID: 242987200}
+  - component: {fileID: 242987203}
   m_Layer: 5
   m_Name: TutorialButton
   m_TagString: Untagged
@@ -389,6 +390,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 242987198}
   m_CullTransparentMesh: 1
+--- !u!114 &242987203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 242987198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74c72eafd3f3c7a4999324672800759a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSelection
+  mRSE_PlaySFX: {fileID: 11400000, guid: bd3ed23da0aa30f4db7ac31d6b08b284, type: 2}
 --- !u!1 &256848493
 GameObject:
   m_ObjectHideFlags: 0
@@ -879,6 +893,7 @@ GameObject:
   - component: {fileID: 1144563560}
   - component: {fileID: 1144563559}
   - component: {fileID: 1144563558}
+  - component: {fileID: 1144563561}
   m_Layer: 5
   m_Name: ExitButton
   m_TagString: Untagged
@@ -1000,6 +1015,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1144563556}
   m_CullTransparentMesh: 1
+--- !u!114 &1144563561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1144563556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74c72eafd3f3c7a4999324672800759a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSelection
+  mRSE_PlaySFX: {fileID: 11400000, guid: bd3ed23da0aa30f4db7ac31d6b08b284, type: 2}
 --- !u!1 &1195771708
 GameObject:
   m_ObjectHideFlags: 0
@@ -1451,6 +1479,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MainMenuManager
   mRSE_LoadScene: {fileID: 11400000, guid: 16fb095d832144e43bf71c228d4e95a0, type: 2}
   mRSE_PlayMusic: {fileID: 11400000, guid: 96538b5c73c06634eb75cdb8d6094e00, type: 2}
+  mRSE_PlaySFX: {fileID: 11400000, guid: bd3ed23da0aa30f4db7ac31d6b08b284, type: 2}
   mRSE_StartTutorial: {fileID: 11400000, guid: e4d066f498efe10458b79fcedb8d5ada, type: 2}
   mRSO_Name: {fileID: 11400000, guid: 287e44bd3d759c24cafdf1d4825087d8, type: 2}
   mRSO_Tutorial: {fileID: 11400000, guid: 82296bff2e9f6f8499733bd4962b415f, type: 2}
@@ -2315,6 +2344,7 @@ GameObject:
   - component: {fileID: 2107956417}
   - component: {fileID: 2107956416}
   - component: {fileID: 2107956415}
+  - component: {fileID: 2107956419}
   m_Layer: 5
   m_Name: StartButton
   m_TagString: Untagged
@@ -2436,6 +2466,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 400, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2107956419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2107956414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74c72eafd3f3c7a4999324672800759a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSelection
+  mRSE_PlaySFX: {fileID: 11400000, guid: bd3ed23da0aa30f4db7ac31d6b08b284, type: 2}
 --- !u!1 &2138469981
 GameObject:
   m_ObjectHideFlags: 0

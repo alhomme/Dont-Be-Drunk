@@ -25,6 +25,6 @@ public class StarterManager : MonoBehaviour
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         MyUtils.Log("StarterManager: OnSceneLoaded: " + scene.name);
-        mRSE_LoadScene.Dispatch("GameScene");
+        mRSE_LoadScene.Dispatch("MainMenuScene");
     }
 }

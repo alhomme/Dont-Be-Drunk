@@ -168,6 +168,8 @@ MonoBehaviour:
   mRSE_GameOver: {fileID: 11400000, guid: e1af525915569f346b82816d45e009d1, type: 2}
   mRSE_Pause: {fileID: 11400000, guid: 8092c54747fa4f94db3ede2d6efe3074, type: 2}
   mRSE_Collision: {fileID: 11400000, guid: 3d5891bad81998d46bf757f41a806729, type: 2}
+  mRSE_PlayMusic: {fileID: 11400000, guid: 96538b5c73c06634eb75cdb8d6094e00, type: 2}
+  mRSE_PlaySFX: {fileID: 11400000, guid: bd3ed23da0aa30f4db7ac31d6b08b284, type: 2}
   mBounceHeight: 0.2
   mBounceDistance: 1.5
   mBounceEase: 3

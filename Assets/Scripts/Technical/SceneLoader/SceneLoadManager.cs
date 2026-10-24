@@ -25,12 +25,16 @@ public class SceneLoadManager : MonoBehaviour
         mActiveScene = SceneManager.GetActiveScene().name;
         mRSE_LoadScene.Event += OnLoadScene;
         SceneManager.sceneLoaded += OnSceneLoaded;
+
+        mFadeCanvas.alpha = 0f;
     }
 
     private void OnDisable()
     {
         mRSE_LoadScene.Event -= OnLoadScene;
         SceneManager.sceneLoaded -= OnSceneLoaded;
+
+        mFadeCanvas.alpha = 0f;
     }
 
     private void OnLoadScene(string scene)
@@ -56,6 +60,9 @@ public class SceneLoadManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        if (scene.name == "TechnicalScene")
+            return;
+
         FadeFromBlack();
 
         MyUtils.Log("SceneLoader: OnSceneLoaded: " + scene.name);

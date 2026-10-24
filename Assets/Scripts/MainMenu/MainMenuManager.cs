@@ -8,6 +8,7 @@ public class MainMenuManager : MonoBehaviour
     [Header("RSE")]
     [SerializeField] private RSE_LoadScene mRSE_LoadScene;
     [SerializeField] private RSE_PlayMusic mRSE_PlayMusic;
+    [SerializeField] private RSE_PlaySFX mRSE_PlaySFX;
     [SerializeField] private RSE_StartTutorial mRSE_StartTutorial;
 
     [Header("RSO")]
@@ -25,8 +26,6 @@ public class MainMenuManager : MonoBehaviour
 
     private void OnEnable()
     {
-        // Play Menu music
-
         // Retrieve best scores
         string goldName = PlayerPrefs.GetString("GoldName", "");
         if (goldName != "")
@@ -50,6 +49,12 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        // Play Menu music
+        mRSE_PlayMusic.Dispatch("MainMenu");
+    }
+
     public void OnStartClicked()
     {
         MyUtils.Log("OnStartClicked: " + mNameInputField.text);
@@ -61,6 +66,8 @@ public class MainMenuManager : MonoBehaviour
             mRSO_Name.Value = mNameInputField.text;
 
         // Stop Menu music
+        mRSE_PlayMusic.Dispatch("");
+        mRSE_PlaySFX.Dispatch("UI_Start");
 
         // RSE LoadScene
         mRSE_LoadScene.Dispatch("GameScene");
@@ -69,12 +76,13 @@ public class MainMenuManager : MonoBehaviour
     public void OnTutorialClicked()
     {
         MyUtils.Log("OnTutorialClicked");
+        mRSE_PlaySFX.Dispatch("UI_Confirm");
     }
 
     public void OnExitClicked()
     {
         MyUtils.Log("OnExitClicked");
+        mRSE_PlayMusic.Dispatch("");
         Application.Quit();
     }
-
 }

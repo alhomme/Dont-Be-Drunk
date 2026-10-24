@@ -12,4 +12,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3d598122ef483742821902485dfd8b4, type: 3}
   m_Name: SSO_SFX
   m_EditorClassIdentifier: Assembly-CSharp::SSO_Audio
-  mValue: []
+  mValue:
+  - key: UI_Select
+    value: {fileID: 8300000, guid: 5df1e5f4abdaab84d995d4d36bd3511f, type: 3}
+  - key: UI_Confirm
+    value: {fileID: 8300000, guid: e131149aea94af847b5df120c51163d8, type: 3}
+  - key: UI_Cancel
+    value: {fileID: 8300000, guid: 28b457c4114cf2c45b2efdbfa7550d79, type: 3}
+  - key: UI_Start
+    value: {fileID: 8300000, guid: 6c3247987a50c6a48b28ba35c5cb556d, type: 3}
+  - key: Game_Step
+    value: {fileID: 8300000, guid: db622bc73a35a2342b95bc3ca5a134bd, type: 3}
+  - key: Game_Heart
+    value: {fileID: 8300000, guid: aa0eb5ffc9bc9774ba1fa0f7d390bad3, type: 3}
+  - key: Game_Eat
+    value: {fileID: 8300000, guid: ccf5aa107cce16a40988bf80c1d218b3, type: 3}
+  - key: Game_Drink
+    value: {fileID: 8300000, guid: e113504ca23d285459c3296f5c56d49f, type: 3}
+  - key: Game_Hit
+    value: {fileID: 8300000, guid: add61666f0c43aa49b10e0efb05e86a2, type: 3}
+  - key: GameOver_Police
+    value: {fileID: 8300000, guid: 4b6d6f670061b14489134d55f0f1d54e, type: 3}
+  - key: GameOver_Alcohol
+    value: {fileID: 8300000, guid: c4096447ea11e1047a9ab192e793789e, type: 3}
+  - key: GameOver_Life
+    value: {fileID: 8300000, guid: 92504b681c3729648a6110525c59b6c1, type: 3}

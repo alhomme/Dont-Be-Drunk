@@ -21,6 +21,8 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private RSE_GameOver mRSE_GameOver;
     [SerializeField] private RSE_Pause mRSE_Pause;
     [SerializeField] private RSE_Collision mRSE_Collision;
+    [SerializeField] private RSE_PlayMusic mRSE_PlayMusic;
+    [SerializeField] private RSE_PlaySFX mRSE_PlaySFX;
 
     [Header("Bounce")]
     [SerializeField] private float mBounceHeight = 0.2f;
@@ -110,6 +112,7 @@ public class PlayerManager : MonoBehaviour
     private void OnStartGame()
     {
         mGameStarted = true;
+        mRSE_PlayMusic.Dispatch("Biome0");
         UpdateState(PlayerState.Bouncing);
     }
 
@@ -144,13 +147,10 @@ public class PlayerManager : MonoBehaviour
             mRSO_Distance.Value = (int)(transform.position.z);
             if (mRSO_Distance.Value % 510 == 0)
             {
-                MyUtils.Log("On rentre ici");
                 mRSO_Biome.Value = Mathf.Min(mRSO_Biome.Value + 1, 3);
+                mRSE_PlayMusic.Dispatch("Biome" + mRSO_Biome.Value.ToString());
             }
         }
-
-       // if ((int)(transform.position.z) == 0)
-       //     mRSO_Biome.Value = 0;
     }
 
 
@@ -251,20 +251,6 @@ public class PlayerManager : MonoBehaviour
             .WithOnComplete(() => BounceDown(bounceGround, bouncePeak, bounceDuration))
             .BindToPositionY(transform)
             .AddTo(transform);
-
-
-        /*  mBounceMotion = LSequence.Create()
-              .Append(LMotion.Create(bounceGround, bouncePeak, bounceDuration / 2)
-                  .WithEase(mBounceEase)
-                  .BindToPositionY(transform))
-              .Append(LMotion.Create(bouncePeak, bounceGround, bounceDuration / 2)
-                  .WithEase(mBounceEase)
-                  .WithOnComplete(() => UpdateState(PlayerState.Landing))
-                  .BindToPositionY(transform))
-              .Run()
-              .AddTo(transform);
-
-          return;*/
     }
 
     private void BounceDown(float bounceGround, float bouncePeak, float duration)
@@ -291,23 +277,10 @@ public class PlayerManager : MonoBehaviour
         // Landing anim
         // Squash in & out
         // Then Bounce
-
         mCurrentMotion = LMotion.Create(mScaleBase, squashScale, mLandDuration / 2)
             .WithOnComplete(() => LandUp(squashScale))
             .BindToLocalScale(transform)
             .AddTo(transform);
-
-        /*  mLandMotion = LSequence.Create()
-              .Append(LMotion.Create(mScaleBase, squashScale, mLandDuration / 2)
-                  .WithEase(mLandEase)
-                  .BindToLocalScale(transform))
-              .Append(LMotion.Create(squashScale, mScaleBase, mLandDuration / 2)
-                  .WithEase(mLandEase)
-                  .WithOnComplete(() => UpdateState(PlayerState.Bouncing))
-                  .BindToLocalScale(transform))
-              .Run()
-              .AddTo(transform);
-        */
     }
 
     private void LandUp(Vector3 squashScale)
@@ -345,17 +318,6 @@ public class PlayerManager : MonoBehaviour
             .WithOnComplete(() => JumpDown(jumpPeak, jumpDuration))
             .BindToPositionY(transform)
             .AddTo(transform);
-
-        /*   mJumpMotion = LSequence.Create()
-               .Append(LMotion.Create(jumpStart, jumpPeak, jumpDuration / 2)
-                   .WithEase(mJumpEase)
-                   .BindToPositionY(transform))
-               .Append(LMotion.Create(jumpPeak, mGroundY, jumpDuration / 2)
-                   .WithEase(mJumpEase)
-                   .WithOnComplete(() => UpdateState(PlayerState.Landing))
-                   .BindToPositionY(transform))
-               .Run()
-               .AddTo(transform);*/
     }
 
     private void JumpDown(float jumpPeak, float jumpDuration)
@@ -428,17 +390,25 @@ public class PlayerManager : MonoBehaviour
                     .AddTo(gameObject);
 
                 mObstacleParticle.Play();
+                mRSE_PlaySFX.Dispatch("Game_Hit");
                 if (other.tag == "Stand")
+                {
                     mStrengthParticle.Play();
+                    mRSE_PlaySFX.Dispatch("Game_Eat");
+                }
             }
             else if ((mAlcoholLayer & (1 << other.gameObject.layer)) > 0)
             {
                 mAlcoholParticle.Play();
+                mRSE_PlaySFX.Dispatch("Game_Drink");
             }
             else if ((mCollectibleLayer & (1 << other.gameObject.layer)) > 0)
             {
                 if (other.tag == "Heart")
+                {
                     mHeartParticle.Play();
+                    mRSE_PlaySFX.Dispatch("Game_Heart");
+                }
             }
 
             mRSE_Collision.Dispatch(other.gameObject);

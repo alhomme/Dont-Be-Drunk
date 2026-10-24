@@ -8,6 +8,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.Playables;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 using static UnityEngine.Rendering.DebugUI;
 
@@ -19,6 +21,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private RSE_GameOver mRSE_GameOver;
     [SerializeField] private RSE_Pause mRSE_Pause;
     [SerializeField] private RSE_LoadScene mRSE_LoadScene;
+    [SerializeField] private RSE_PlayMusic mRSE_PlayMusic;
+    [SerializeField] private RSE_PlaySFX mRSE_PlaySFX;
 
     [Header("RSO")]
     [SerializeField] private RSO_InputSource mRSO_InputSource;
@@ -65,7 +69,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image mGameOverMedal;
     [SerializeField] private Sprite[] mMedalSprites;
     [SerializeField] private GameObject mGameOverQuit;
-    [SerializeField] private GameObject mGameOverPrisonCell;
+    [SerializeField] private GameObject mGoPrisonCell;
+    [SerializeField] private GameObject mGoFaintUp;
+    [SerializeField] private GameObject mGoFaintDown;
+
 
     [Header("Alcohol Bar")]
     [SerializeField] private GameObject mAlcoholGo;
@@ -78,6 +85,10 @@ public class UIManager : MonoBehaviour
         { Color.orange, Color.red, Color.red, Color.red },
         { Color.red, Color.red, Color.red, Color.red }
     };
+
+    private Vector3 mCellBasePosition = new Vector3(0f, 1080f, 0f);
+    private Vector3 mFaintUpBasePosition = new Vector3(0f, 540, 0f);
+    private Vector3 mFaintDownBasePosition = new Vector3(0f, -540, 0f);
 
 
     private void OnEnable()
@@ -118,6 +129,7 @@ public class UIManager : MonoBehaviour
         DisableAlcoholBar();
         DisableGameOver();
         DisableGoPolice();
+        DisableGoAlcohol();
         DisablePause();
     }
 
@@ -252,6 +264,8 @@ public class UIManager : MonoBehaviour
         mGameOverScore.text = "Score: " + mScoreText.text + " m";
         UpdateBestScores();
 
+        mRSE_PlayMusic.Dispatch("");
+
         switch (goType)
         {
             case GameOverType.Life:
@@ -293,19 +307,23 @@ public class UIManager : MonoBehaviour
         mGameOverCause.text = "Tu t'es fait arrêter !";
         mGameOverIcon.sprite = mGameOverIconSprites["Police"];
 
-        float curY = mGameOverPrisonCell.transform.localPosition.y;
+        float curY = mGoPrisonCell.transform.localPosition.y;
 
-        mGameOverPrisonCell.SetActive(true);
+        mGoPrisonCell.SetActive(true);
 
         LMotion.Create(curY, 0, 1f)
-            .WithOnComplete(() => ShowGameOverPanel())
-            .BindToLocalPositionY(mGameOverPrisonCell.transform)
-            .AddTo(mGameOverPrisonCell);   
+            .WithOnComplete(() => {
+                ShowGameOverPanel();
+                mRSE_PlaySFX.Dispatch("GameOver_Police");
+            })
+            .BindToLocalPositionY(mGoPrisonCell.transform)
+            .AddTo(mGoPrisonCell);   
     }
 
     private void DisableGoPolice()
     {
-        mGameOverPrisonCell.SetActive(false);
+        mGoPrisonCell.SetActive(false);
+        mGoPrisonCell.transform.localPosition = mCellBasePosition;
     }
 
     private void GameOverLife()
@@ -313,6 +331,7 @@ public class UIManager : MonoBehaviour
         mGameOverCause.text = "Tu t'es blessé !";
         mGameOverIcon.sprite = mGameOverIconSprites["Life"];
 
+        mRSE_PlaySFX.Dispatch("GameOver_Life");
         ShowGameOverPanel();
     }
 
@@ -321,7 +340,39 @@ public class UIManager : MonoBehaviour
         mGameOverCause.text = "Tu t'es évanoui !";
         mGameOverIcon.sprite = mGameOverIconSprites["Alcohol"];
 
-        ShowGameOverPanel();
+        mGoFaintUp.SetActive(true);
+        mGoFaintDown.SetActive(true);
+
+        LSequence.Create()
+            .Append(LMotion.Create(mFaintUpBasePosition.y, 0f, 0.5f)
+                .BindToLocalPositionY(mGoFaintUp.transform))
+            .Join(LMotion.Create(mFaintDownBasePosition.y, 0f, 0.5f)
+                .BindToLocalPositionY(mGoFaintDown.transform))
+
+            .Append(LMotion.Create(0f, mFaintUpBasePosition.y / 2, 1f)
+                .BindToLocalPositionY(mGoFaintUp.transform))
+            .Join(LMotion.Create(0f, mFaintDownBasePosition.y / 2, 1f)
+                .BindToLocalPositionY(mGoFaintDown.transform))
+
+            .Append(LMotion.Create(mFaintUpBasePosition.y / 2, 0f, 0.25f)
+                .BindToLocalPositionY(mGoFaintUp.transform))
+            .Join(LMotion.Create(mFaintDownBasePosition.y / 2, 0f, 0.25f)
+                .WithOnComplete(() => { 
+                    ShowGameOverPanel();
+                    mRSE_PlaySFX.Dispatch("GameOver_Alcohol");
+                })
+                .BindToLocalPositionY(mGoFaintDown.transform))
+            .Run();
+    }
+
+
+    private void DisableGoAlcohol()
+    {
+        mGoFaintUp.transform.localPosition = mFaintUpBasePosition;
+        mGoFaintUp.SetActive(false);
+
+        mGoFaintDown.transform.localPosition = mFaintDownBasePosition;
+        mGoFaintDown.SetActive(false);
     }
 
     private void UpdateBestScores()
@@ -386,6 +437,7 @@ public class UIManager : MonoBehaviour
     public void ReturnToMainMenu()
     {
         DisableAll();
+        mRSE_PlaySFX.Dispatch("UI_Confirm");
         mRSE_LoadScene.Dispatch("MainMenuScene");
     }
 
@@ -420,6 +472,8 @@ public class UIManager : MonoBehaviour
 
     private void OpenPauseMenu()
     {
+        mRSE_PlayMusic.Dispatch("Pause");
+
         mPausePanel.SetActive(true);
         mEventSystem.SetSelectedGameObject(mPauseCloseButton);
         mEventSystem.enabled = true;
@@ -429,6 +483,9 @@ public class UIManager : MonoBehaviour
 
     public void ClosePauseMenu()
     {
+        mRSE_PlaySFX.Dispatch("UI_Cancel");
+        mRSE_PlayMusic.Dispatch("UnPause");
+
         mEventSystem.SetSelectedGameObject(null);
         mEventSystem.enabled = false;
         mPausePanel.SetActive(false);

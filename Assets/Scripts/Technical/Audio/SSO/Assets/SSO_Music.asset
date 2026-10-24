@@ -12,4 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3d598122ef483742821902485dfd8b4, type: 3}
   m_Name: SSO_Music
   m_EditorClassIdentifier: Assembly-CSharp::SSO_Audio
-  mValue: []
+  mValue:
+  - key: MainMenu
+    value: {fileID: 8300000, guid: 61456c4dad9b74d46b4f2c9f2579dae4, type: 3}
+  - key: Biome0
+    value: {fileID: 8300000, guid: 04d5b18c107ec0647a593aea592e359f, type: 3}
+  - key: Biome1
+    value: {fileID: 8300000, guid: c659572656b5dcb4089c2b8c0236b360, type: 3}
+  - key: Biome2
+    value: {fileID: 8300000, guid: 91a95342f97673947a50852b377f7ca7, type: 3}
+  - key: Biome3
+    value: {fileID: 8300000, guid: 849602eeb5483744c938800518f61fa3, type: 3}
