@@ -49,7 +49,7 @@ public class LifeManager : MonoBehaviour
     {
         if ((mObstacleLayer & (1 << go.layer)) > 0)
         {
-            MyUtils.Log("Collision with Obstacle");
+            MyUtils.Log("LifeManager: Collision with Obstacle");
             mRSO_Life.Value--;
             return;
         }
@@ -58,7 +58,7 @@ public class LifeManager : MonoBehaviour
         {
             if (go.tag == "Heart")
             {
-                MyUtils.Log("Collision with Collectible Heart");
+                MyUtils.Log("LifeManager: Collision with Collectible Heart");
                 if (mRSO_Life.Value < mRSO_LifeMax.Value)
                     mRSO_Life.Value++;
             }

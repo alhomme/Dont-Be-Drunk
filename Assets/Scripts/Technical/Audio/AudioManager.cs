@@ -1,4 +1,5 @@
 using LitMotion;
+using LitMotion.Extensions;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -67,8 +68,10 @@ public class AudioManager : MonoBehaviour
                     mInactiveAS.volume = 0f;
                     mInactiveAS.Play();
 
+                    LMotion.Create(1f, 0f, 2f).BindToVolume(mActiveAS);
+
                     LSequence.Create()
-                        .Append(LMotion.Create(1f, 0f, 2f).Bind(x => mActiveAS.volume = x))
+                        .Append(LMotion.Create(1f, 0f, 2f).BindToVolume(mActiveAS))
                         .Join(LMotion.Create(0f, 1f, 2f)
                             .WithOnComplete(() =>
                             {
@@ -77,7 +80,7 @@ public class AudioManager : MonoBehaviour
                                 mActiveAS = mInactiveAS;
                                 mInactiveAS = tmpAS;
                             })
-                            .Bind(x => mInactiveAS.volume = x))
+                            .BindToVolume(mInactiveAS))
                         .Run();
                 }
                 else
@@ -103,8 +106,8 @@ public class AudioManager : MonoBehaviour
             AudioClip clip = mSSO_SFX.Value[sfx];
             if (clip != null)
             {
-                mAudioSourceSFX.clip = clip;
-                mAudioSourceSFX.Play();
+//                mAudioSourceSFX.clip = clip;
+                mAudioSourceSFX.PlayOneShot(clip);
             }
         }
     }

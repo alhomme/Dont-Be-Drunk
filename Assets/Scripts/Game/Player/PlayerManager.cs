@@ -390,11 +390,15 @@ public class PlayerManager : MonoBehaviour
                     .AddTo(gameObject);
 
                 mObstacleParticle.Play();
-                mRSE_PlaySFX.Dispatch("Game_Hit");
+                
                 if (other.tag == "Stand")
                 {
                     mStrengthParticle.Play();
-                    mRSE_PlaySFX.Dispatch("Game_Eat");
+                    mRSE_PlaySFX.Dispatch("Game_Stand");
+                }
+                else
+                {
+                    mRSE_PlaySFX.Dispatch("Game_Hit");
                 }
             }
             else if ((mAlcoholLayer & (1 << other.gameObject.layer)) > 0)
@@ -408,6 +412,11 @@ public class PlayerManager : MonoBehaviour
                 {
                     mHeartParticle.Play();
                     mRSE_PlaySFX.Dispatch("Game_Heart");
+                }
+                else if (other.tag == "Puke")
+                {
+                    mStrengthParticle.Play();
+                    mRSE_PlaySFX.Dispatch("Game_Puke");
                 }
             }
 

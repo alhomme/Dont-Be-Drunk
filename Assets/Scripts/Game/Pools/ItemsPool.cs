@@ -24,11 +24,11 @@ public class ItemsPool : MonoBehaviour
         // Obstacles
         for (int i = 0; i < mSSO_Obstacles.Value.Count; i++)
         {
-            int lastIdx = mSSO_Obstacles.Value[i].mCountPerBiome.Length - 1;
-            int maxElem = mAmount * mSSO_Obstacles.Value[i].mCountPerBiome[lastIdx];
+            int lastIdx = mSSO_Obstacles.Value[i].pCountPerBiome.Length - 1;
+            int maxElem = mAmount * mSSO_Obstacles.Value[i].pCountPerBiome[lastIdx];
             for (int j = 0; j < maxElem; j++)
             {
-                GameObject obj = Instantiate(mSSO_Obstacles.Value[i].mPrefab, transform);
+                GameObject obj = Instantiate(mSSO_Obstacles.Value[i].pPrefab, transform);
                 obj.SetActive(false);
                 mPooledObjects.Add(obj);
             }
@@ -37,11 +37,11 @@ public class ItemsPool : MonoBehaviour
         // Collectibles
         for (int i = 0; i < mSSO_Collectibles.Value.Count; i++)
         {
-            int lastIdx = mSSO_Collectibles.Value[i].mCountPerBiome.Length - 1;
-            int maxElem = mAmount * mSSO_Collectibles.Value[i].mCountPerBiome[lastIdx];
+            int lastIdx = mSSO_Collectibles.Value[i].pCountPerBiome.Length - 1;
+            int maxElem = mAmount * mSSO_Collectibles.Value[i].pCountPerBiome[lastIdx];
             for (int j = 0; j < maxElem; j++)
             {
-                GameObject obj = Instantiate(mSSO_Collectibles.Value[i].mPrefab, transform);
+                GameObject obj = Instantiate(mSSO_Collectibles.Value[i].pPrefab, transform);
                 obj.SetActive(false);
                 mPooledObjects.Add(obj);
             }

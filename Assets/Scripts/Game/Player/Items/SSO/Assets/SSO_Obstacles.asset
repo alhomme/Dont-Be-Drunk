@@ -13,27 +13,27 @@ MonoBehaviour:
   m_Name: SSO_Obstacles
   m_EditorClassIdentifier: Assembly-CSharp::SSO_Items
   mValue:
-  - mTag: Stand
-    mLayer:
+  - pTag: Pedestrian
+    pLayer:
       serializedVersion: 2
       m_Bits: 64
-    mCountPerBiome: 0100000001000000020000000200000003000000i
-    mPrefab: {fileID: 1938452783846109518, guid: 62336c2cd59d58c46a7dd3d7d63cb520, type: 3}
-  - mTag: Pedestrian
-    mLayer:
+    pCountPerBiome: 0100000001000000010000000200000002000000i
+    pPrefab: {fileID: 5255205546566913499, guid: 4ec1d5d577d5e704aa278fc949884372, type: 3}
+  - pTag: Movers
+    pLayer:
       serializedVersion: 2
       m_Bits: 64
-    mCountPerBiome: 0100000001000000010000000200000002000000i
-    mPrefab: {fileID: 5255205546566913499, guid: 4ec1d5d577d5e704aa278fc949884372, type: 3}
-  - mTag: Movers
-    mLayer:
+    pCountPerBiome: 0100000001000000020000000200000003000000i
+    pPrefab: {fileID: 2705502655683068545, guid: aaece66b16955b64ba25566d90ef6da1, type: 3}
+  - pTag: Police
+    pLayer:
       serializedVersion: 2
       m_Bits: 64
-    mCountPerBiome: 0100000001000000020000000200000003000000i
-    mPrefab: {fileID: 2705502655683068545, guid: aaece66b16955b64ba25566d90ef6da1, type: 3}
-  - mTag: Police
-    mLayer:
+    pCountPerBiome: 0000000001000000010000000200000002000000i
+    pPrefab: {fileID: 7044580721560682325, guid: 2240397f1594654458286d7de5e13825, type: 3}
+  - pTag: Stand
+    pLayer:
       serializedVersion: 2
       m_Bits: 64
-    mCountPerBiome: 0000000001000000010000000200000002000000i
-    mPrefab: {fileID: 7044580721560682325, guid: 2240397f1594654458286d7de5e13825, type: 3}
+    pCountPerBiome: 0100000001000000020000000200000003000000i
+    pPrefab: {fileID: 1938452783846109518, guid: 62336c2cd59d58c46a7dd3d7d63cb520, type: 3}

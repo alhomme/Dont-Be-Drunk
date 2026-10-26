@@ -4,21 +4,21 @@ using UnityEngine;
 [Serializable]
 public struct Item
 {
-    public string mTag;
-    public LayerMask mLayer;
-    public int[] mCountPerBiome;
-    public GameObject mPrefab;
+    public string pTag;
+    public LayerMask pLayer;
+    public int[] pCountPerBiome;
+    public GameObject pPrefab;
 }
 
 [Serializable]
 public struct ItemAlcohol
 {
 
-    public LayerMask mLayer;
-    public int[] mCountPerBiome;
+    public LayerMask pLayer;
+    public int[] pCountPerBiome;
 
-    public string[] mTags;
-    public GameObject[] mPrefabs;
-    public int[] mRates;
-    public int[] mEffects;
+    public string[] pTags;
+    public GameObject[] pPrefabs;
+    public int[] pRates;
+    public int[] pEffects;
 }

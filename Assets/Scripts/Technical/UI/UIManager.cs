@@ -23,6 +23,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private RSE_LoadScene mRSE_LoadScene;
     [SerializeField] private RSE_PlayMusic mRSE_PlayMusic;
     [SerializeField] private RSE_PlaySFX mRSE_PlaySFX;
+    [SerializeField] private RSE_Puke mRSE_Puke;
 
     [Header("RSO")]
     [SerializeField] private RSO_InputSource mRSO_InputSource;
@@ -55,6 +56,10 @@ public class UIManager : MonoBehaviour
     [Header("Biome Title")]
     [SerializeField] private GameObject mBiomeTitleObject;
     [SerializeField] private string[] mBiomeTitles;
+
+    [Header("Puke")]
+    [SerializeField] private GameObject mPukePanel;
+    [SerializeField] private Image[] mPukeImages;
 
     [Header("Pause")]
     [SerializeField] private GameObject mPausePanel;
@@ -95,6 +100,7 @@ public class UIManager : MonoBehaviour
     {
         mRSE_StartGame.Event += OnStartGame;
         mRSE_GameOver.Event += OnGameOver;
+        mRSE_Puke.Event += OnPuke;
 
         mRSO_InputSource.OnChanged += OnInputSourceChange;
         mRSO_Distance.OnChanged += OnDistanceChanged;
@@ -112,6 +118,7 @@ public class UIManager : MonoBehaviour
 
         mRSE_StartGame.Event -= OnStartGame;
         mRSE_GameOver.Event -= OnGameOver;
+        mRSE_Puke.Event -= OnPuke;
 
         mRSO_InputSource.OnChanged -= OnInputSourceChange;
         mRSO_Distance.OnChanged -= OnDistanceChanged;
@@ -131,6 +138,7 @@ public class UIManager : MonoBehaviour
         DisableGoPolice();
         DisableGoAlcohol();
         DisablePause();
+        DisablePuke();
     }
 
     private void OnInputSourceChange(InputSource source)
@@ -252,11 +260,45 @@ public class UIManager : MonoBehaviour
     }
 
     /*
+     * PUKE
+     */
+
+    private void OnPuke()
+    {
+        mPukePanel.SetActive(true);
+
+        // Set random position for 3 images
+        for (int i = 0; i < 3; i++)
+        {
+            Vector3 pos = mPukeImages[i].transform.localPosition;
+
+            pos.y = 100 + (UnityEngine.Random.Range(0, 5) * 50);
+            mPukeImages[i].transform.localPosition = pos;
+        }
+
+        // Animate down for 1.5 seconds: Wait 0.5 and down 1 ?
+        LSequence.Create()
+            .AppendInterval(1.5f)
+            .Append(LMotion.Create(0f, mPukePanel.transform.localPosition.y - 1080, 0.5f)
+                .WithOnComplete(() => DisablePuke())
+                .BindToLocalPositionY(mPukePanel.transform))
+            .Run();
+    }
+
+    private void DisablePuke()
+    {
+        mPukePanel.transform.localPosition = Vector3.zero;
+        mPukePanel.SetActive(false);
+    }
+
+    /*
      * GAME OVER
      */
 
     private void OnGameOver(GameOverType goType)
     {
+        MyUtils.Log("UIManager.OnGameOver: " + goType);
+
         DisableScore();
         DisablePause();
 
@@ -317,7 +359,7 @@ public class UIManager : MonoBehaviour
                 mRSE_PlaySFX.Dispatch("GameOver_Police");
             })
             .BindToLocalPositionY(mGoPrisonCell.transform)
-            .AddTo(mGoPrisonCell);   
+            .AddTo(mGoPrisonCell);
     }
 
     private void DisableGoPolice()

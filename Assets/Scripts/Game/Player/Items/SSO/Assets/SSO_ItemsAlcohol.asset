@@ -13,17 +13,17 @@ MonoBehaviour:
   m_Name: SSO_ItemsAlcohol
   m_EditorClassIdentifier: Assembly-CSharp::SSO_ItemsAlcohol
   mValue:
-    mLayer:
+    pLayer:
       serializedVersion: 2
       m_Bits: 256
-    mCountPerBiome: 0200000003000000040000000500000005000000i
-    mTags:
+    pCountPerBiome: 0200000003000000040000000500000005000000i
+    pTags:
     - Beer
     - Wine
     - Tequila
-    mPrefabs:
+    pPrefabs:
     - {fileID: 8398601021662225049, guid: 67ebebe313b325b49a8c33c825bdabe5, type: 3}
     - {fileID: 6965821067544458296, guid: a610c52de611e244dbe9b6a800cf193b, type: 3}
     - {fileID: 7215856734752065869, guid: 1242a88922ac6d34da67517f4c97626b, type: 3}
-    mRates: 3c0000005a00000064000000i
-    mEffects: 010000000200000003000000i
+    pRates: 3c0000005a00000064000000i
+    pEffects: 010000000200000003000000i

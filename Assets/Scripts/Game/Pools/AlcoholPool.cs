@@ -20,14 +20,14 @@ public class AlcoholPool : MonoBehaviour
     {
         mPooledObjects = new List<GameObject>();
 
-        int lastIdx = mSSO_ItemsAlcohol.Value.mCountPerBiome.Length - 1;
-        int maxElem = mAmount * mSSO_ItemsAlcohol.Value.mCountPerBiome[lastIdx];
+        int lastIdx = mSSO_ItemsAlcohol.Value.pCountPerBiome.Length - 1;
+        int maxElem = mAmount * mSSO_ItemsAlcohol.Value.pCountPerBiome[lastIdx];
 
-        for (int i = 0; i < mSSO_ItemsAlcohol.Value.mTags.Length; i++)
+        for (int i = 0; i < mSSO_ItemsAlcohol.Value.pTags.Length; i++)
         {
             for (int j = 0; j < maxElem; j++)
             {
-                GameObject obj = Instantiate(mSSO_ItemsAlcohol.Value.mPrefabs[i], transform);
+                GameObject obj = Instantiate(mSSO_ItemsAlcohol.Value.pPrefabs[i], transform);
                 obj.SetActive(false);
                 mPooledObjects.Add(obj);
             }
@@ -41,11 +41,11 @@ public class AlcoholPool : MonoBehaviour
         int randNb = UnityEngine.Random.Range(0, 100);
         //MyUtils.Log("AlcoholPool.GetPooledObject: Random number is " + randNb);
 
-        for (int i = 0; i < mSSO_ItemsAlcohol.Value.mRates.Length; i++)
+        for (int i = 0; i < mSSO_ItemsAlcohol.Value.pRates.Length; i++)
         {
-            if (randNb < mSSO_ItemsAlcohol.Value.mRates[i])
+            if (randNb < mSSO_ItemsAlcohol.Value.pRates[i])
             {
-                return GetPooledObjectByName(mSSO_ItemsAlcohol.Value.mTags[i]);
+                return GetPooledObjectByName(mSSO_ItemsAlcohol.Value.pTags[i]);
             }
         }
 

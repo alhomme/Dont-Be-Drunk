@@ -24,9 +24,9 @@ MonoBehaviour:
   - key: Game_Step
     value: {fileID: 8300000, guid: db622bc73a35a2342b95bc3ca5a134bd, type: 3}
   - key: Game_Heart
-    value: {fileID: 8300000, guid: aa0eb5ffc9bc9774ba1fa0f7d390bad3, type: 3}
+    value: {fileID: 8300000, guid: 35c436c9c281827478a1212b9eb35a45, type: 3}
   - key: Game_Eat
-    value: {fileID: 8300000, guid: ccf5aa107cce16a40988bf80c1d218b3, type: 3}
+    value: {fileID: 8300000, guid: e66023a543e07aa4298bc98e91c126a9, type: 3}
   - key: Game_Drink
     value: {fileID: 8300000, guid: e113504ca23d285459c3296f5c56d49f, type: 3}
   - key: Game_Hit
@@ -37,3 +37,9 @@ MonoBehaviour:
     value: {fileID: 8300000, guid: c4096447ea11e1047a9ab192e793789e, type: 3}
   - key: GameOver_Life
     value: {fileID: 8300000, guid: 92504b681c3729648a6110525c59b6c1, type: 3}
+  - key: Game_Stand
+    value: {fileID: 8300000, guid: d0a032c7b40696847ace4494e0ce21f9, type: 3}
+  - key: GameOver_Cell
+    value: {fileID: 8300000, guid: 71c3ff4e06fff134b925c29331303916, type: 3}
+  - key: Game_Puke
+    value: {fileID: 8300000, guid: d1edc5f487cfc4e49826f85a74a6877d, type: 3}

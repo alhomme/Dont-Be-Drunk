@@ -202,8 +202,8 @@ public class ProcGenManager : MonoBehaviour
     {
         for (int i = 0; i < mSSO_Obstacles.Value.Count; i++)
         {
-            int nbObstacle = mSSO_Obstacles.Value[i].mCountPerBiome[mChunkBiome];
-            string nameObstacle = mSSO_Obstacles.Value[i].mTag;
+            int nbObstacle = mSSO_Obstacles.Value[i].pCountPerBiome[mChunkBiome];
+            string nameObstacle = mSSO_Obstacles.Value[i].pTag;
             for (int j = 0; j < nbObstacle; j++)
             {
                 GameObject obstacleObj = mItemsPool.GetPooledObjectByName(nameObstacle);
@@ -219,7 +219,7 @@ public class ProcGenManager : MonoBehaviour
 
     private void GenerateAlcohol()
     {
-        int nbAlcohol = mSSO_ItemsAlcohol.Value.mCountPerBiome[mChunkBiome];
+        int nbAlcohol = mSSO_ItemsAlcohol.Value.pCountPerBiome[mChunkBiome];
         for (int i = 0; i < nbAlcohol; i++)
         {
             GameObject alcoholItem = mAlcoholPool.GetPooledObject();
@@ -246,7 +246,7 @@ public class ProcGenManager : MonoBehaviour
             {
                 if (mChunkCount == mCollectiblesChunks[i][j])
                 {
-                    string nameCollectible = mSSO_Collectibles.Value[i].mTag;
+                    string nameCollectible = mSSO_Collectibles.Value[i].pTag;
                     GameObject collectibleObj = mItemsPool.GetPooledObjectByName(nameCollectible);
 
                     Vector3 collectiblePosition = GenerateRandomPosition(collectibleObj.transform.position.y);
@@ -337,7 +337,7 @@ public class ProcGenManager : MonoBehaviour
             List<int> collectibleChunks = new List<int>();
             List<int> chunkNbs = Enumerable.Range(0, 17).ToList();
 
-            int nbItem = mSSO_Collectibles.Value[i].mCountPerBiome[mChunkBiome];
+            int nbItem = mSSO_Collectibles.Value[i].pCountPerBiome[mChunkBiome];
             for (int j = 0; j < nbItem; j++)
             {
                 int rnd = UnityEngine.Random.Range(0, chunkNbs.Count);
