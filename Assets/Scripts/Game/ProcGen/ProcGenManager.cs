@@ -9,26 +9,19 @@ public class ProcGenManager : MonoBehaviour
     [Header("Character")]
     [SerializeField] private GameObject mCharacterPrefab;
 
-    [Header("Camera")]
-    [SerializeField] private PositionConstraint mCameraPC;
-
     [Header("Pools")]
     [SerializeField] private RoadPool mRoadPool;
     [SerializeField] private ItemsPool mItemsPool;
     [SerializeField] private AlcoholPool mAlcoholPool;
     [SerializeField] private BiomePool mBiomePool;
 
-    [Header("Layers")]
-    [SerializeField] private LayerMask mCollectibleLayer;
-    [SerializeField] private LayerMask mAlcoholLayer;
-
     [Header("RSO")]
     [SerializeField] private RSO_Seed mRSO_Seed;
     [SerializeField] private RSO_Distance mRSO_Distance;
+    [SerializeField] private RSO_Player mRSO_Player;
 
     [Header("RSE")]
     [SerializeField] private RSE_StartGame mRSE_StartGame;
-    [SerializeField] private RSE_Collision mRSE_Collision;
 
     [Header("SSO")]
     [SerializeField] private SSO_Items mSSO_Obstacles;
@@ -38,7 +31,6 @@ public class ProcGenManager : MonoBehaviour
     [Header("Seed")]
     public int pSeed;
 
-    private GameObject mCharacterObj;
     private float mChunkPosition;
     private int mChunkBiome;
     private int mChunkBiomeAsset;
@@ -53,7 +45,6 @@ public class ProcGenManager : MonoBehaviour
     private void OnEnable()
     {
         mRSO_Distance.OnChanged += OnDistanceChanged;
-        mRSE_Collision.Event += OnCollision;
 
         mRSO_Seed.Value = 0;
         mChunkPosition = -15f;
@@ -66,7 +57,6 @@ public class ProcGenManager : MonoBehaviour
         MyUtils.Log("ProcGenManager.OnDisable", false);
 
         mRSO_Distance.OnChanged -= OnDistanceChanged;
-        mRSE_Collision.Event -= OnCollision;
         mRSO_Seed.Value = 0;
 
         // Deactivate all active gameObjects from pools
@@ -105,12 +95,8 @@ public class ProcGenManager : MonoBehaviour
 
         // Instantiate Character
         Vector3 characterPosition = new Vector3(0f, 0.5f, -5f);
-        mCharacterObj = Instantiate(mCharacterPrefab, transform);
-        mCharacterObj.transform.position = characterPosition;
-
-        // Set Camera Constraint to character
-        ConstraintSource cSource = new ConstraintSource { sourceTransform = mCharacterObj.transform, weight = 1f };
-        mCameraPC.AddSource(cSource);
+        mRSO_Player.Value = Instantiate(mCharacterPrefab, transform);
+        mRSO_Player.Value.transform.position = characterPosition;
 
 
         // Everything is ready
@@ -359,17 +345,6 @@ public class ProcGenManager : MonoBehaviour
             DeactivateChunk((float)distance - 30);
             // Generate new one
             GenerateChunk();
-        }
-    }
-
-    private void OnCollision(GameObject go)
-    {
-        MyUtils.Log("ProcGenManager.OnCollision");
-        // Deactivate other if alcohol or collectible
-        if ((mAlcoholLayer & (1 << go.layer)) > 0 || (mCollectibleLayer & (1 << go.layer)) > 0)
-        {
-            MyUtils.Log("Collision with Alcohol or Collectible -> Deactivate it");
-            go.SetActive(false);
         }
     }
 }

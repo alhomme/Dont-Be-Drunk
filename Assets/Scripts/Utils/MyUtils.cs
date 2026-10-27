@@ -9,6 +9,12 @@ public static class MyUtils
             Debug.Log(message);
     }
 
+    public static void LogWarning(string message, bool print = true)
+    {
+        if (print)
+            Debug.LogWarning(message);
+    }
+
     public static void LogList(List<int> intList)
     {
         string str = "List = { ";

@@ -20,9 +20,12 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private RSE_StartGame mRSE_StartGame;
     [SerializeField] private RSE_GameOver mRSE_GameOver;
     [SerializeField] private RSE_Pause mRSE_Pause;
-    [SerializeField] private RSE_Collision mRSE_Collision;
-    [SerializeField] private RSE_PlayMusic mRSE_PlayMusic;
-    [SerializeField] private RSE_PlaySFX mRSE_PlaySFX;
+    [SerializeField] private RSE_Drink mRSE_Drink;
+    [SerializeField] private RSE_Eat mRSE_Eat;
+    [SerializeField] private RSE_Heart mRSE_Heart;
+    [SerializeField] private RSE_Hit mRSE_Hit;
+    [SerializeField] private RSE_Police mRSE_Police;
+    [SerializeField] private RSE_Puke mRSE_Puke;
 
     [Header("Bounce")]
     [SerializeField] private float mBounceHeight = 0.2f;
@@ -93,9 +96,6 @@ public class PlayerManager : MonoBehaviour
         mRSE_StartGame.Event += OnStartGame;
         mRSE_GameOver.Event += OnGameOver;
         mRSE_Pause.Event += OnPause;
-
-        mRSO_Distance.Value = 0;
-        mRSO_Biome.Value = 0;
     }
 
     private void OnDisable()
@@ -111,8 +111,10 @@ public class PlayerManager : MonoBehaviour
 
     private void OnStartGame()
     {
+        mRSO_Distance.Value = 0;
+        mRSO_Biome.Value = 0;
+
         mGameStarted = true;
-        mRSE_PlayMusic.Dispatch("Biome0");
         UpdateState(PlayerState.Bouncing);
     }
 
@@ -148,7 +150,6 @@ public class PlayerManager : MonoBehaviour
             if (mRSO_Distance.Value % 510 == 0)
             {
                 mRSO_Biome.Value = Mathf.Min(mRSO_Biome.Value + 1, 3);
-                mRSE_PlayMusic.Dispatch("Biome" + mRSO_Biome.Value.ToString());
             }
         }
     }
@@ -376,54 +377,60 @@ public class PlayerManager : MonoBehaviour
         {
             if ((mObstacleLayer & (1 << other.gameObject.layer)) > 0)
             {
-                Color baseColor = mPlayerMaterial.color;
-
-                // Add blink effect
-                mBlinkMotion = LMotion.Create(1f, 0f, 0.1f)
-                    .WithEase(Ease.OutQuad)
-                    .WithLoops(6, LoopType.Yoyo)
-                    .Bind(a => {
-                        Color c = baseColor;
-                        c.a = a;
-                        mPlayerMaterial.color = c;
-                    })
-                    .AddTo(gameObject);
-
+                Blink();
                 mObstacleParticle.Play();
-                
-                if (other.tag == "Stand")
+
+                if (other.tag == "Police")
+                    mRSE_Police.Dispatch();
+                else if (other.tag == "Stand")
                 {
                     mStrengthParticle.Play();
-                    mRSE_PlaySFX.Dispatch("Game_Stand");
+                    mRSE_Eat.Dispatch();
                 }
-                else
-                {
-                    mRSE_PlaySFX.Dispatch("Game_Hit");
-                }
+
+                mRSE_Hit.Dispatch();
             }
             else if ((mAlcoholLayer & (1 << other.gameObject.layer)) > 0)
             {
                 mAlcoholParticle.Play();
-                mRSE_PlaySFX.Dispatch("Game_Drink");
+                mRSE_Drink.Dispatch(other.tag);
+
+                other.gameObject.SetActive(false);
             }
             else if ((mCollectibleLayer & (1 << other.gameObject.layer)) > 0)
             {
                 if (other.tag == "Heart")
                 {
                     mHeartParticle.Play();
-                    mRSE_PlaySFX.Dispatch("Game_Heart");
+                    mRSE_Heart.Dispatch();
                 }
                 else if (other.tag == "Puke")
                 {
                     mStrengthParticle.Play();
-                    mRSE_PlaySFX.Dispatch("Game_Puke");
+                    mRSE_Puke.Dispatch();
                 }
-            }
 
-            mRSE_Collision.Dispatch(other.gameObject);
+                other.gameObject.SetActive(false);
+            }
         }
 
         mLastObstacleHit = other.gameObject.transform.position;
+    }
+
+    private void Blink()
+    {
+        Color baseColor = mPlayerMaterial.color;
+
+        // Add blink effect
+        mBlinkMotion = LMotion.Create(1f, 0f, 0.1f)
+            .WithEase(Ease.OutQuad)
+            .WithLoops(6, LoopType.Yoyo)
+            .Bind(a => {
+                Color c = baseColor;
+                c.a = a;
+                mPlayerMaterial.color = c;
+            })
+            .AddTo(gameObject);
     }
 
     private void OnGameOver(GameOverType type)

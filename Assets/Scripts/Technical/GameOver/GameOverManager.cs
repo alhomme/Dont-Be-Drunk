@@ -5,7 +5,7 @@ public class GameOverManager : MonoBehaviour
     [Header("RSE")]
     [SerializeField] private RSE_GameOver mRSE_GameOver;
     [SerializeField] private RSE_StartGame mRSE_StartGame;
-    [SerializeField] private RSE_Collision mRSE_Collision;
+    [SerializeField] private RSE_Police mRSE_Police;
 
     [Header("RSO")]
     [SerializeField] private RSO_Biome mRSO_Biome;
@@ -17,7 +17,7 @@ public class GameOverManager : MonoBehaviour
     private void OnEnable()
     {
         mRSE_StartGame.Event += OnStartGame;
-        mRSE_Collision.Event += OnCollision;
+        mRSE_Police.Event += OnPolice;
         mRSO_Life.OnChanged += OnLifeChanged;
         mRSO_AlcoholLevel.OnChanged += OnAlcoholLevelChanged;
 
@@ -27,7 +27,7 @@ public class GameOverManager : MonoBehaviour
     private void OnDisable()
     {
         mRSE_StartGame.Event -= OnStartGame;
-        mRSE_Collision.Event -= OnCollision;
+        mRSE_Police.Event -= OnPolice;
         mRSO_Life.OnChanged -= OnLifeChanged;
         mRSO_AlcoholLevel.OnChanged -= OnAlcoholLevelChanged;
     }
@@ -37,24 +37,19 @@ public class GameOverManager : MonoBehaviour
         mIsGameOver = false;
     }
 
-    private void OnCollision(GameObject go)
+    private void OnPolice()
     {
-        MyUtils.Log("GameOverManager.OnCollision");
-
         if (mIsGameOver)
             return;
 
-        if (go.tag == "Police")
+        // Alcootest
+        if ((mRSO_Biome.Value == 0 && mRSO_AlcoholLevel.Value > 75)
+            || (mRSO_Biome.Value == 1 && mRSO_AlcoholLevel.Value > 50)
+            || (mRSO_Biome.Value == 2 && mRSO_AlcoholLevel.Value > 25)
+            || (mRSO_Biome.Value == 3 && mRSO_AlcoholLevel.Value > 0))
         {
-            // Alcootest
-            if ((mRSO_Biome.Value == 0 && mRSO_AlcoholLevel.Value > 75)
-                || (mRSO_Biome.Value == 1 && mRSO_AlcoholLevel.Value > 50)
-                || (mRSO_Biome.Value == 2 && mRSO_AlcoholLevel.Value > 25)
-                || (mRSO_Biome.Value == 3 && mRSO_AlcoholLevel.Value > 0))
-            {
-                mRSE_GameOver.Dispatch(GameOverType.Police);
-                mIsGameOver = true;
-            }
+            mRSE_GameOver.Dispatch(GameOverType.Police);
+            mIsGameOver = true;
         }
     }
 

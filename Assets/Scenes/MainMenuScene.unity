@@ -1478,8 +1478,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenuManager
   mRSE_LoadScene: {fileID: 11400000, guid: 16fb095d832144e43bf71c228d4e95a0, type: 2}
-  mRSE_PlayMusic: {fileID: 11400000, guid: 96538b5c73c06634eb75cdb8d6094e00, type: 2}
   mRSE_PlaySFX: {fileID: 11400000, guid: bd3ed23da0aa30f4db7ac31d6b08b284, type: 2}
+  mRSE_MainMenu: {fileID: 11400000, guid: b3d1b87c7f91cc9448f0bcaf7943dcdd, type: 2}
   mRSE_StartTutorial: {fileID: 11400000, guid: e4d066f498efe10458b79fcedb8d5ada, type: 2}
   mRSO_Name: {fileID: 11400000, guid: 287e44bd3d759c24cafdf1d4825087d8, type: 2}
   mRSO_Tutorial: {fileID: 11400000, guid: 82296bff2e9f6f8499733bd4962b415f, type: 2}

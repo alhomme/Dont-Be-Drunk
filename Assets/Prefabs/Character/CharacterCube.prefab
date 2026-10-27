@@ -167,7 +167,12 @@ MonoBehaviour:
   mRSE_StartGame: {fileID: 11400000, guid: 434494670f3e3364cbc12424bff80265, type: 2}
   mRSE_GameOver: {fileID: 11400000, guid: e1af525915569f346b82816d45e009d1, type: 2}
   mRSE_Pause: {fileID: 11400000, guid: 8092c54747fa4f94db3ede2d6efe3074, type: 2}
-  mRSE_Collision: {fileID: 11400000, guid: 3d5891bad81998d46bf757f41a806729, type: 2}
+  mRSE_Drink: {fileID: 11400000, guid: e1df4b5ab42df7f4bbd91df8bd934586, type: 2}
+  mRSE_Eat: {fileID: 11400000, guid: 529a92b19850e1d40a390a3c556cf4ec, type: 2}
+  mRSE_Heart: {fileID: 11400000, guid: 25cd8c57b203f704785f1e4d17452583, type: 2}
+  mRSE_Hit: {fileID: 11400000, guid: 07698a6231da4ac4592977525af5f82a, type: 2}
+  mRSE_Police: {fileID: 11400000, guid: bfbceb92a90e1a149bb1f7a9b57a5ff8, type: 2}
+  mRSE_Puke: {fileID: 11400000, guid: 038ef820a3f29fd4f90f385d28ad680c, type: 2}
   mRSE_PlayMusic: {fileID: 11400000, guid: 96538b5c73c06634eb75cdb8d6094e00, type: 2}
   mRSE_PlaySFX: {fileID: 11400000, guid: bd3ed23da0aa30f4db7ac31d6b08b284, type: 2}
   mBounceHeight: 0.2

@@ -9,6 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac7014c369b1c6a4e9b949907b5b7ed0, type: 3}
-  m_Name: RSE_Puke
-  m_EditorClassIdentifier: Assembly-CSharp::RSE_Puke
+  m_Script: {fileID: 11500000, guid: 27c094eeee2451d43bb7dd9e563f3e1e, type: 3}
+  m_Name: RSE_Drink
+  m_EditorClassIdentifier: Assembly-CSharp::RSE_Drink

@@ -9,6 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6636f7f925b16a742bb0439f889b89c1, type: 3}
-  m_Name: RSE_PlayMusic
-  m_EditorClassIdentifier: Assembly-CSharp::RSE_PlayMusic
+  m_Script: {fileID: 11500000, guid: 5ed81c04d8f81d54d99d47695a47f352, type: 3}
+  m_Name: RSO_Player
+  m_EditorClassIdentifier: Assembly-CSharp::RSO_Player

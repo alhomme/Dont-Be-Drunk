@@ -10,7 +10,8 @@ public class LifeManager : MonoBehaviour
 
     [Header("RSE")]
     [SerializeField] private RSE_StartGame mRSE_StartGame;
-    [SerializeField] private RSE_Collision mRSE_Collision;
+    [SerializeField] private RSE_Heart mRSE_Heart;
+    [SerializeField] private RSE_Hit mRSE_Hit;
 
     [Header("Layers")]
     [SerializeField] private LayerMask mObstacleLayer;
@@ -19,14 +20,16 @@ public class LifeManager : MonoBehaviour
     private void OnEnable()
     {
         mRSE_StartGame.Event += OnStartGame;
-        mRSE_Collision.Event += OnCollision;
+        mRSE_Heart.Event += OnHeart;
+        mRSE_Hit.Event += OnHit;
         mRSO_Biome.OnChanged += OnBiomeChanged;
     }
 
     private void OnDisable()
     {
         mRSE_StartGame.Event -= OnStartGame;
-        mRSE_Collision.Event -= OnCollision;
+        mRSE_Heart.Event -= OnHeart;
+        mRSE_Hit.Event -= OnHit;
         mRSO_Biome.OnChanged -= OnBiomeChanged;
     }
 
@@ -45,24 +48,16 @@ public class LifeManager : MonoBehaviour
         }
     }
 
-    private void OnCollision(GameObject go)
+    private void OnHeart()
     {
-        if ((mObstacleLayer & (1 << go.layer)) > 0)
-        {
-            MyUtils.Log("LifeManager: Collision with Obstacle");
-            mRSO_Life.Value--;
-            return;
-        }
+        MyUtils.Log("LifeManager.OnHeart");
+        if (mRSO_Life.Value < mRSO_LifeMax.Value)
+            mRSO_Life.Value++;
+    }
 
-        if ((mCollectibleLayer & (1 << go.layer)) > 0)
-        {
-            if (go.tag == "Heart")
-            {
-                MyUtils.Log("LifeManager: Collision with Collectible Heart");
-                if (mRSO_Life.Value < mRSO_LifeMax.Value)
-                    mRSO_Life.Value++;
-            }
-            return;
-        }
+    private void OnHit()
+    {
+        MyUtils.Log("LifeManager.OnHit");
+        mRSO_Life.Value--;
     }
 }

@@ -331,7 +331,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -415,21 +415,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProcGenManager
   mCharacterPrefab: {fileID: 2060697253741032292, guid: 186feb15a161da84db5047b80d434d1b, type: 3}
-  mCameraPC: {fileID: 292048735}
   mRoadPool: {fileID: 951791711}
   mItemsPool: {fileID: 171681642}
   mAlcoholPool: {fileID: 220501454}
   mBiomePool: {fileID: 1692661129}
-  mCollectibleLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  mAlcoholLayer:
-    serializedVersion: 2
-    m_Bits: 256
   mRSO_Seed: {fileID: 11400000, guid: f9f3771198be8b84283304388529686c, type: 2}
   mRSO_Distance: {fileID: 11400000, guid: a0c472b35d1e19a4f9f00ff6d7d2eb9a, type: 2}
+  mRSO_Player: {fileID: 11400000, guid: b4a46a1d296d7ba45b459c9dd2a05ec3, type: 2}
   mRSE_StartGame: {fileID: 11400000, guid: 434494670f3e3364cbc12424bff80265, type: 2}
-  mRSE_Collision: {fileID: 11400000, guid: 3d5891bad81998d46bf757f41a806729, type: 2}
   mSSO_Obstacles: {fileID: 11400000, guid: b28bfc0f22bc11340a713b781de307a5, type: 2}
   mSSO_Collectibles: {fileID: 11400000, guid: dd802ec39dcc3a24fa010ce53c00fcca, type: 2}
   mSSO_ItemsAlcohol: {fileID: 11400000, guid: 5db1dc005c61e2b4a8377abe366b7fc3, type: 2}
@@ -481,6 +474,74 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1508932696
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1508932698}
+  - component: {fileID: 1508932699}
+  - component: {fileID: 1508932697}
+  m_Layer: 0
+  m_Name: CameraManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1508932697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1508932696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 528551b71595d404e9a9908fdc807d6f, type: 2}
+--- !u!4 &1508932698
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1508932696}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1508932699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1508932696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb44b3c7c2ea8cb4ab5af307ef05b551, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraManager
+  mRSO_Player: {fileID: 11400000, guid: b4a46a1d296d7ba45b459c9dd2a05ec3, type: 2}
+  mRSO_AlcoholLevel: {fileID: 11400000, guid: 68878b335d1e3594f95681d6ab68de7d, type: 2}
+  mRSE_StarGame: {fileID: 11400000, guid: 434494670f3e3364cbc12424bff80265, type: 2}
+  mCameraVolume: {fileID: 1508932697}
+  mCameraTransform: {fileID: 292048733}
+  mCameraPC: {fileID: 292048735}
 --- !u!1 &1692661127
 GameObject:
   m_ObjectHideFlags: 0
@@ -670,3 +731,4 @@ SceneRoots:
   - {fileID: 1692661128}
   - {fileID: 220501455}
   - {fileID: 472937060}
+  - {fileID: 1508932698}

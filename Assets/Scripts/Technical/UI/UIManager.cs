@@ -10,6 +10,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 using static UnityEngine.Rendering.DebugUI;
 
@@ -21,7 +22,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private RSE_GameOver mRSE_GameOver;
     [SerializeField] private RSE_Pause mRSE_Pause;
     [SerializeField] private RSE_LoadScene mRSE_LoadScene;
-    [SerializeField] private RSE_PlayMusic mRSE_PlayMusic;
     [SerializeField] private RSE_PlaySFX mRSE_PlaySFX;
     [SerializeField] private RSE_Puke mRSE_Puke;
 
@@ -249,11 +249,10 @@ public class UIManager : MonoBehaviour
 
         LSequence.Create()
             .Append(LMotion.Create(mBiomeTitleObject.transform.localPosition.x, 0f, 1f)
-                .WithEase(Ease.OutBack)
+                .WithEase(Ease.OutExpo)
                 .BindToLocalPositionX(mBiomeTitleObject.transform))
-            .AppendInterval(1f)
             .Append(LMotion.Create(0f, mBiomeTitleObject.transform.localPosition.x * -1f, 1f)
-                .WithEase(Ease.InBack)
+                .WithEase(Ease.InExpo)
                 .WithOnComplete(() => mBiomeTitleObject.transform.localPosition = basePosition)
                 .BindToLocalPositionX(mBiomeTitleObject.transform))
             .Run();
@@ -305,8 +304,6 @@ public class UIManager : MonoBehaviour
         // Check for high score & save
         mGameOverScore.text = "Score: " + mScoreText.text + " m";
         UpdateBestScores();
-
-        mRSE_PlayMusic.Dispatch("");
 
         switch (goType)
         {
@@ -514,8 +511,6 @@ public class UIManager : MonoBehaviour
 
     private void OpenPauseMenu()
     {
-        mRSE_PlayMusic.Dispatch("Pause");
-
         mPausePanel.SetActive(true);
         mEventSystem.SetSelectedGameObject(mPauseCloseButton);
         mEventSystem.enabled = true;
@@ -525,9 +520,6 @@ public class UIManager : MonoBehaviour
 
     public void ClosePauseMenu()
     {
-        mRSE_PlaySFX.Dispatch("UI_Cancel");
-        mRSE_PlayMusic.Dispatch("UnPause");
-
         mEventSystem.SetSelectedGameObject(null);
         mEventSystem.enabled = false;
         mPausePanel.SetActive(false);

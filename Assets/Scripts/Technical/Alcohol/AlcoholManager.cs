@@ -10,7 +10,8 @@ public class AlcoholManager : MonoBehaviour
 
     [Header("RSE")]
     [SerializeField] private RSE_StartGame mRSE_StartGame;
-    [SerializeField] private RSE_Collision mRSE_Collision;
+    [SerializeField] private RSE_Drink mRSE_Drink;
+    [SerializeField] private RSE_Eat mRSE_Eat;
     [SerializeField] private RSE_Puke mRSE_Puke;
 
     [Header("Layers")]
@@ -21,13 +22,17 @@ public class AlcoholManager : MonoBehaviour
     private void OnEnable()
     {
         mRSE_StartGame.Event += OnStartGame;
-        mRSE_Collision.Event += OnCollision;
+        mRSE_Drink.Event += OnDrink;
+        mRSE_Eat.Event += OnEat;
+        mRSE_Puke.Event += OnPuke;
     }
 
     private void OnDisable()
     {
         mRSE_StartGame.Event -= OnStartGame;
-        mRSE_Collision.Event -= OnCollision;
+        mRSE_Drink.Event -= OnDrink;
+        mRSE_Eat.Event -= OnEat;
+        mRSE_Puke.Event -= OnPuke;
     }
 
     private void OnStartGame()
@@ -35,44 +40,30 @@ public class AlcoholManager : MonoBehaviour
         mRSO_AlcoholLevel.Value = 0;
     }
 
-    private void OnCollision(GameObject go)
+    private void OnDrink(string drink)
     {
-        if ((mSSO_ItemsAlcohol.Value.pLayer & (1 << go.layer)) > 0)
+        for (int i = 0; i < mSSO_ItemsAlcohol.Value.pTags.Length; i++)
         {
-            for (int i = 0; i < mSSO_ItemsAlcohol.Value.pTags.Length; i++)
+            if (drink == mSSO_ItemsAlcohol.Value.pTags[i])
             {
-                if (go.tag == mSSO_ItemsAlcohol.Value.pTags[i])
-                {
-                    mRSO_AlcoholLevel.Value += mSSO_ItemsAlcohol.Value.pEffects[i] * 10;
-                    MyUtils.Log("New Alcohol value: " + mRSO_AlcoholLevel.Value);
-                    return;
-                }
-            }
-        }
-
-        MyUtils.Log("AlcoholManager.OnCollision: " + go.tag);
-
-        if ((mCollectibleLayer & (1 << go.layer)) > 0)
-        {
-            if (go.tag == "Puke")
-            {
-                MyUtils.Log("AlcoholManager: Collision with Collectible Puke");
-                mRSE_Puke.Dispatch();
-
-                mRSO_AlcoholLevel.Value -= 25;
-                if (mRSO_AlcoholLevel.Value < 0)
-                    mRSO_AlcoholLevel.Value = 0;
+                mRSO_AlcoholLevel.Value += mSSO_ItemsAlcohol.Value.pEffects[i] * 10;
                 MyUtils.Log("New Alcohol value: " + mRSO_AlcoholLevel.Value);
+                return;
             }
-            return;
         }
+    }
 
-        if (go.tag == "Stand")
-        {
-            mRSO_AlcoholLevel.Value -= 20;
-            if (mRSO_AlcoholLevel.Value < 0)
-                mRSO_AlcoholLevel.Value = 0;
-            MyUtils.Log("New Alcohol value: " + mRSO_AlcoholLevel.Value);
-        }
+    private void OnEat()
+    {
+        mRSO_AlcoholLevel.Value -= 20;
+        if (mRSO_AlcoholLevel.Value < 0)
+            mRSO_AlcoholLevel.Value = 0;
+    }
+
+    private void OnPuke()
+    {
+        mRSO_AlcoholLevel.Value -= 25;
+        if (mRSO_AlcoholLevel.Value < 0)
+            mRSO_AlcoholLevel.Value = 0;
     }
 }

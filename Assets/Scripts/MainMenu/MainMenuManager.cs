@@ -7,8 +7,8 @@ public class MainMenuManager : MonoBehaviour
 {
     [Header("RSE")]
     [SerializeField] private RSE_LoadScene mRSE_LoadScene;
-    [SerializeField] private RSE_PlayMusic mRSE_PlayMusic;
     [SerializeField] private RSE_PlaySFX mRSE_PlaySFX;
+    [SerializeField] private RSE_MainMenu mRSE_MainMenu;
     [SerializeField] private RSE_StartTutorial mRSE_StartTutorial;
 
     [Header("RSO")]
@@ -51,8 +51,7 @@ public class MainMenuManager : MonoBehaviour
 
     private void Start()
     {
-        // Play Menu music
-        mRSE_PlayMusic.Dispatch("MainMenu");
+        mRSE_MainMenu.Dispatch();
     }
 
     public void OnStartClicked()
@@ -66,7 +65,6 @@ public class MainMenuManager : MonoBehaviour
             mRSO_Name.Value = mNameInputField.text;
 
         // Stop Menu music
-        mRSE_PlayMusic.Dispatch("");
         mRSE_PlaySFX.Dispatch("UI_Start");
 
         // RSE LoadScene
@@ -82,7 +80,6 @@ public class MainMenuManager : MonoBehaviour
     public void OnExitClicked()
     {
         MyUtils.Log("OnExitClicked");
-        mRSE_PlayMusic.Dispatch("");
         Application.Quit();
     }
 }
