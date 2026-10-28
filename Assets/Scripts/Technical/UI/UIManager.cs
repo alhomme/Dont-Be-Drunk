@@ -227,11 +227,11 @@ public class UIManager : MonoBehaviour
     private void UpdateAlcoholBarColor(float value)
     {
         int idx = 3;
-        if (value <= 0.25f)
+        if (value < 0.25f)
             idx = 0;
-        else if (value <= 0.5f)
+        else if (value < 0.5f)
             idx = 1;
-        else if (value <= 0.75f)
+        else if (value < 0.75f)
             idx = 2;
 
         mSliderFill.color = mFillColors[mRSO_Biome.Value, idx];

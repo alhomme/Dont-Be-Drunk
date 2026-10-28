@@ -1,5 +1,6 @@
 using LitMotion;
 using LitMotion.Extensions;
+using System.Xml.Linq;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -128,8 +129,16 @@ public class AudioManager : MonoBehaviour
         mActiveAS.Play();
     }
 
-    private void MusicTransition(AudioClip clip)
+    private void MusicTransition(string musicName)
     {
+        AudioClip clip = mSSO_Music.Value[musicName];
+
+        if (clip == null)
+        {
+            MyUtils.LogWarning("AudioManager: Music " + musicName + "does not exist.");
+            return;
+        }
+
         // Transition fade between musics
         mInactiveAS.clip = clip;
         mInactiveAS.volume = 0f;
@@ -194,12 +203,7 @@ public class AudioManager : MonoBehaviour
         if (biome == 0)
             return;
 
-        AudioClip clip = mSSO_Music.Value["Biome" + biome.ToString()];
-
-        if (clip != null && mActiveAS.clip != clip)
-        {
-            MusicTransition(clip);
-        }
+        MusicTransition("Biome" + biome.ToString());
     }
 
 
