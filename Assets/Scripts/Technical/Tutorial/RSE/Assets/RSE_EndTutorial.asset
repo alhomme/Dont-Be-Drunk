@@ -9,6 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c341d55c4549540428c23ca29dcc97c4, type: 3}
-  m_Name: RSO_Tutorial
-  m_EditorClassIdentifier: Assembly-CSharp::RSO_Tutorial
+  m_Script: {fileID: 11500000, guid: 7029d3de31898754ea90094dcaa0fe71, type: 3}
+  m_Name: RSE_EndTutorial
+  m_EditorClassIdentifier: Assembly-CSharp::RSE_EndTutorial

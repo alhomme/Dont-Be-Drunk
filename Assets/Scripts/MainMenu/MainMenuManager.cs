@@ -10,24 +10,32 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private RSE_PlaySFX mRSE_PlaySFX;
     [SerializeField] private RSE_MainMenu mRSE_MainMenu;
     [SerializeField] private RSE_StartTutorial mRSE_StartTutorial;
+    [SerializeField] private RSE_EndTutorial mRSE_EndTutorial;
 
     [Header("RSO")]
     [SerializeField] private RSO_Name mRSO_Name;
     [SerializeField] private RSO_SaveData mRSO_SaveData;
 
     [Header("Elements")]
+    [SerializeField] private GameObject mContent;
     [Header("Name Input")]
     [SerializeField] private TMP_InputField mNameInputField;
+    [Header("Buttons")]
+    [SerializeField] private Button mStartButton;
+    [SerializeField] private Button mTutorialButton;
 
     [Header("Scores")]
     [SerializeField] private TextMeshProUGUI mGoldScore;
     [SerializeField] private TextMeshProUGUI mSilverScore;
     [SerializeField] private TextMeshProUGUI mBronzeScore;
 
+    private bool mStartGame;
+
     private void OnEnable()
     {
-        // Retrieve best scores
+        mRSE_EndTutorial.Event += OnTutorialEnded;
 
+        // Retrieve best scores
         if (mRSO_SaveData.Value.pGoldScore.pScore > 0)
         {
             mGoldScore.text = mRSO_SaveData.Value.pGoldScore.pName
@@ -56,8 +64,15 @@ public class MainMenuManager : MonoBehaviour
             mBronzeScore.text = "";
     }
 
+    private void OnDisable()
+    {
+        mRSE_EndTutorial.Event -= OnTutorialEnded;
+    }
+
     private void Start()
     {
+        mStartGame = false;
+        mContent.SetActive(true);
         mRSE_MainMenu.Dispatch();
     }
 
@@ -71,17 +86,47 @@ public class MainMenuManager : MonoBehaviour
         else
             mRSO_Name.Value = mNameInputField.text;
 
-        // Stop Menu music
-        mRSE_PlaySFX.Dispatch("UI_Start");
 
-        // RSE LoadScene
-        mRSE_LoadScene.Dispatch("GameScene");
+        // Show Tutorial if it's the first time playing
+        if (mRSO_SaveData.Value.pTutorialSeen)
+        {
+            // Stop Menu music
+            mRSE_PlaySFX.Dispatch("UI_Start");
+
+            // RSE LoadScene
+            mRSE_LoadScene.Dispatch("GameScene");
+        }
+        else
+        {
+            mStartGame = true;
+            mContent.SetActive(false);
+            mRSE_StartTutorial.Dispatch();
+        }
     }
 
     public void OnTutorialClicked()
     {
         MyUtils.Log("OnTutorialClicked");
+
+        mContent.SetActive(false);
+        //mTutorialButton.interactable = false;
         mRSE_PlaySFX.Dispatch("UI_Confirm");
+
+        mRSE_StartTutorial.Dispatch();
+    }
+
+    private void OnTutorialEnded(bool status)
+    {
+        mContent.SetActive(true);
+
+        if (status && mStartGame)
+        {
+            // Stop Menu music
+            mRSE_PlaySFX.Dispatch("UI_Start");
+
+            // RSE LoadScene
+            mRSE_LoadScene.Dispatch("GameScene");
+        }
     }
 
     public void OnExitClicked()

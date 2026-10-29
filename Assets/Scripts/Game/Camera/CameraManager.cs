@@ -50,7 +50,7 @@ public class CameraManager : MonoBehaviour
 
         mDepthOfField.focalLength.value = 100f;
 
-        mAlcoholZone = 0;
+        mAlcoholZone = mRSO_AlcoholLevel.Value / 25;
     }
 
     private void OnAlcoholLevelChanged(int alcoholLevel)

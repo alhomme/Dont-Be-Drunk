@@ -474,9 +474,9 @@ public class UIManager : MonoBehaviour
 
     public void ReturnToMainMenu()
     {
-        DisableAll();
         mRSE_PlaySFX.Dispatch("UI_Confirm");
         mRSE_LoadScene.Dispatch("MainMenuScene");
+        DisableAll();
     }
 
 
@@ -531,6 +531,7 @@ public class UIManager : MonoBehaviour
         mPauseInput.action.performed -= OnPauseInput;
         mReturnInput.action.performed -= OnReturnInput;
 
+        mPausePanel.SetActive(false);
         mEventSystem.SetSelectedGameObject(null);
         mEventSystem.enabled = false;
     }
