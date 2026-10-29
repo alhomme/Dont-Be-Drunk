@@ -19,6 +19,7 @@ public class StarterManager : MonoBehaviour
     private void Start()
     {
         MyUtils.Log("StarterManager");
+
         SceneManager.LoadSceneAsync("TechnicalScene", LoadSceneMode.Additive);
     }
 

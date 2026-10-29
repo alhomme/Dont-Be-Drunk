@@ -17,6 +17,7 @@ using static UnityEngine.Rendering.DebugUI;
 public class UIManager : MonoBehaviour
 {
     [Header("RSE")]
+    [SerializeField] private RSE_Save mRSE_Save;
     [SerializeField] private RSE_StartTutorial mRSE_StartTutorial;
     [SerializeField] private RSE_StartGame mRSE_StartGame;
     [SerializeField] private RSE_GameOver mRSE_GameOver;
@@ -26,8 +27,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private RSE_Puke mRSE_Puke;
 
     [Header("RSO")]
-    [SerializeField] private RSO_InputSource mRSO_InputSource;
-    [SerializeField] private RSO_Tutorial mRSO_Tutorial;
+    [SerializeField] private RSO_SaveData mRSO_SaveData;
     [SerializeField] private RSO_Name mRSO_Name;
     [SerializeField] private RSO_Distance mRSO_Distance;
     [SerializeField] private RSO_Biome mRSO_Biome;
@@ -102,7 +102,6 @@ public class UIManager : MonoBehaviour
         mRSE_GameOver.Event += OnGameOver;
         mRSE_Puke.Event += OnPuke;
 
-        mRSO_InputSource.OnChanged += OnInputSourceChange;
         mRSO_Distance.OnChanged += OnDistanceChanged;
         mRSO_Biome.OnChanged += OnBiomeChanged;
         mRSO_Seed.OnChanged += OnSeedChanged;
@@ -120,7 +119,6 @@ public class UIManager : MonoBehaviour
         mRSE_GameOver.Event -= OnGameOver;
         mRSE_Puke.Event -= OnPuke;
 
-        mRSO_InputSource.OnChanged -= OnInputSourceChange;
         mRSO_Distance.OnChanged -= OnDistanceChanged;
         mRSO_Biome.OnChanged -= OnBiomeChanged;
         mRSO_Seed.OnChanged -= OnSeedChanged;
@@ -139,11 +137,6 @@ public class UIManager : MonoBehaviour
         DisableGoAlcohol();
         DisablePause();
         DisablePuke();
-    }
-
-    private void OnInputSourceChange(InputSource source)
-    {
-
     }
 
     private void OnStartGame()
@@ -416,61 +409,67 @@ public class UIManager : MonoBehaviour
 
     private void UpdateBestScores()
     {
-        string goldName = PlayerPrefs.GetString("GoldName", "");
-        int goldScore = PlayerPrefs.GetInt("GoldScore", 0);
-        string silverName = PlayerPrefs.GetString("SilverName", "");
-        int silverScore = PlayerPrefs.GetInt("SilverScore", 0);
-        string bronzeName = PlayerPrefs.GetString("BronzeName", "");
-        int bronzeScore = PlayerPrefs.GetInt("BronzeScore", 0);
-
-        if (mRSO_Distance.Value > goldScore)
+        SaveData newSaveData = new SaveData
         {
-            bronzeName = silverName;
-            bronzeScore = silverScore;
+            pTutorialSeen = mRSO_SaveData.Value.pTutorialSeen
+        };
 
-            silverName = goldName;
-            silverScore = goldScore;
+        if (mRSO_Distance.Value > mRSO_SaveData.Value.pGoldScore.pScore)
+        {
+            newSaveData.pGoldScore.pName = mRSO_Name.Value;
+            newSaveData.pGoldScore.pScore = mRSO_Distance.Value;
 
-            goldName = mRSO_Name.Value;
-            goldScore = mRSO_Distance.Value;
+            newSaveData.pSilverScore.pName = mRSO_SaveData.Value.pGoldScore.pName;
+            newSaveData.pSilverScore.pScore = mRSO_SaveData.Value.pGoldScore.pScore;
+
+            newSaveData.pBronzeScore.pName = mRSO_SaveData.Value.pSilverScore.pName;
+            newSaveData.pBronzeScore.pScore = mRSO_SaveData.Value.pSilverScore.pScore;
 
             // Image = medal gold
             mGameOverMedal.sprite = mMedalSprites[0];
             mGameOverMedal.enabled = true;
-        }
-        else if (mRSO_Distance.Value > silverScore)
-        {
-            bronzeName = silverName;
-            bronzeScore = silverScore;
 
-            silverName = mRSO_Name.Value;
-            silverScore = mRSO_Distance.Value;
+            mRSE_Save.Dispatch(newSaveData);
+        }
+        else if (mRSO_Distance.Value > mRSO_SaveData.Value.pSilverScore.pScore)
+        {
+            newSaveData.pGoldScore.pName = mRSO_SaveData.Value.pGoldScore.pName;
+            newSaveData.pGoldScore.pScore = mRSO_SaveData.Value.pGoldScore.pScore;
+
+            newSaveData.pSilverScore.pName = mRSO_Name.Value;
+            newSaveData.pSilverScore.pScore = mRSO_Distance.Value;
+
+            newSaveData.pBronzeScore.pName = mRSO_SaveData.Value.pSilverScore.pName;
+            newSaveData.pBronzeScore.pScore = mRSO_SaveData.Value.pSilverScore.pScore;
 
             // Image = medal silver
             mGameOverMedal.sprite = mMedalSprites[1];
             mGameOverMedal.enabled = true;
+
+            mRSE_Save.Dispatch(newSaveData);
         }
-        else if (mRSO_Distance.Value > bronzeScore)
+        else if (mRSO_Distance.Value > mRSO_SaveData.Value.pBronzeScore.pScore)
         {
-            bronzeName = mRSO_Name.Value;
-            bronzeScore = mRSO_Distance.Value;
+            newSaveData.pGoldScore.pName = mRSO_SaveData.Value.pGoldScore.pName;
+            newSaveData.pGoldScore.pScore = mRSO_SaveData.Value.pGoldScore.pScore;
+
+            newSaveData.pSilverScore.pName = mRSO_SaveData.Value.pSilverScore.pName;
+            newSaveData.pSilverScore.pScore = mRSO_SaveData.Value.pSilverScore.pScore;
+
+            newSaveData.pBronzeScore.pName = mRSO_Name.Value;
+            newSaveData.pBronzeScore.pScore = mRSO_Distance.Value;
 
             // Image = medal bronze
             mGameOverMedal.sprite = mMedalSprites[2];
             mGameOverMedal.enabled = true;
+
+            mRSE_Save.Dispatch(newSaveData);
         }
         else
         {
             // No Image of medal
             mGameOverMedal.enabled = false;
         }
-
-        PlayerPrefs.SetString("GoldName", goldName);
-        PlayerPrefs.SetInt("GoldScore", goldScore);
-        PlayerPrefs.SetString("SilverName", silverName);
-        PlayerPrefs.SetInt("SilverScore", silverScore);
-        PlayerPrefs.SetString("BronzeName", bronzeName);
-        PlayerPrefs.SetInt("BronzeScore", bronzeScore);
     }
 
     public void ReturnToMainMenu()

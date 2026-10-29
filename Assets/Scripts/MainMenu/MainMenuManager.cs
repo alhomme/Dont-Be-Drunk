@@ -13,7 +13,7 @@ public class MainMenuManager : MonoBehaviour
 
     [Header("RSO")]
     [SerializeField] private RSO_Name mRSO_Name;
-    [SerializeField] private RSO_Tutorial mRSO_Tutorial;
+    [SerializeField] private RSO_SaveData mRSO_SaveData;
 
     [Header("Elements")]
     [Header("Name Input")]
@@ -27,26 +27,33 @@ public class MainMenuManager : MonoBehaviour
     private void OnEnable()
     {
         // Retrieve best scores
-        string goldName = PlayerPrefs.GetString("GoldName", "");
-        if (goldName != "")
+
+        if (mRSO_SaveData.Value.pGoldScore.pScore > 0)
         {
-            int goldScore = PlayerPrefs.GetInt("GoldScore", 0);
-            mGoldScore.text = goldName + " " + goldScore.ToString() + "m";
-
-            string silverName = PlayerPrefs.GetString("SilverName", "");
-            if (silverName != "")
-            {
-                int silverScore = PlayerPrefs.GetInt("SilverScore", 0);
-                mSilverScore.text = silverName + " " + silverScore.ToString() + "m";
-
-                string bronzeName = PlayerPrefs.GetString("BronzeName", "");
-                if (bronzeName != "")
-                {
-                    int bronzeScore = PlayerPrefs.GetInt("BronzeScore", 0);
-                    mBronzeScore.text = bronzeName + " " + bronzeScore.ToString() + "m";
-                }
-            }
+            mGoldScore.text = mRSO_SaveData.Value.pGoldScore.pName
+                + " "
+                + mRSO_SaveData.Value.pGoldScore.pScore.ToString() + "m";
         }
+        else
+            mGoldScore.text = "";
+
+        if (mRSO_SaveData.Value.pSilverScore.pScore > 0)
+        {
+            mSilverScore.text = mRSO_SaveData.Value.pSilverScore.pName
+                + " "
+                + mRSO_SaveData.Value.pSilverScore.pScore.ToString() + "m";
+        }
+        else
+            mSilverScore.text = "";
+
+        if (mRSO_SaveData.Value.pBronzeScore.pScore > 0)
+        {
+            mBronzeScore.text = mRSO_SaveData.Value.pBronzeScore.pName
+                + " "
+                + mRSO_SaveData.Value.pBronzeScore.pScore.ToString() + "m";
+        }
+        else
+            mBronzeScore.text = "";
     }
 
     private void Start()
