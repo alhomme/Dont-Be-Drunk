@@ -55,7 +55,7 @@ public class GameOverManager : MonoBehaviour
 
     private void OnLifeChanged(int life)
     {
-        MyUtils.Log("GameOverManager.OnLifeChanged");
+        //MyUtils.Log("GameOverManager.OnLifeChanged");
 
         if (mIsGameOver)
             return;

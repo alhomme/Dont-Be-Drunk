@@ -1529,6 +1529,8 @@ MonoBehaviour:
   mRSE_EndTutorial: {fileID: 11400000, guid: adf70736362ec9e4cb85243c1f34d660, type: 2}
   mRSO_Name: {fileID: 11400000, guid: 287e44bd3d759c24cafdf1d4825087d8, type: 2}
   mRSO_SaveData: {fileID: 11400000, guid: 927ecc40c14490e49bcfdc7c92b700f3, type: 2}
+  mEventSystem: {fileID: 737275560}
+  mBackground: {fileID: 1769838468}
   mContent: {fileID: 567757845}
   mNameInputField: {fileID: 1290304725}
   mStartButton: {fileID: 2107956415}

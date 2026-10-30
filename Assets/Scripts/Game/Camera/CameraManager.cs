@@ -13,6 +13,7 @@ public class CameraManager : MonoBehaviour
 
     [Header("RSE")]
     [SerializeField] private RSE_StartGame mRSE_StarGame;
+    [SerializeField] private RSE_Pause mRSE_Pause;
 
     [Header("Camera")]
     [SerializeField] private Volume mCameraVolume;
@@ -28,6 +29,8 @@ public class CameraManager : MonoBehaviour
     private void OnEnable()
     {
         mRSE_StarGame.Event += OnStartGame;
+        mRSE_Pause.Event += OnPause;
+
         mRSO_AlcoholLevel.OnChanged += OnAlcoholLevelChanged;
 
         mCameraVolume.profile.TryGet(out mDepthOfField);
@@ -38,6 +41,8 @@ public class CameraManager : MonoBehaviour
     private void OnDisable()
     {
         mRSE_StarGame.Event -= OnStartGame;
+        mRSE_Pause.Event -= OnPause;
+
         mRSO_AlcoholLevel.OnChanged -= OnAlcoholLevelChanged;
     }
 
@@ -51,6 +56,21 @@ public class CameraManager : MonoBehaviour
         mDepthOfField.focalLength.value = 100f;
 
         mAlcoholZone = mRSO_AlcoholLevel.Value / 25;
+    }
+
+    private void OnPause(bool pauseStatus)
+    {
+        if (!mCameraMotion.IsActive())
+            return;
+
+        if (pauseStatus)
+        {
+            mCameraMotion.PlaybackSpeed = 0f;
+        }
+        else
+        {
+            mCameraMotion.PlaybackSpeed = 1f;
+        }
     }
 
     private void OnAlcoholLevelChanged(int alcoholLevel)

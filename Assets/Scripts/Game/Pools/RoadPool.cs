@@ -13,7 +13,7 @@ public class RoadPool : MonoBehaviour
 
     private void Awake()
     {
-        MyUtils.Log("RoadPool.Awake");
+        //MyUtils.Log("RoadPool.Awake");
         pIsInitialized = false;
         InitializePool();
     }

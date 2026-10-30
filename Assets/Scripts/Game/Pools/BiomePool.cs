@@ -11,7 +11,7 @@ public class BiomePool : MonoBehaviour
 
     private void Awake()
     {
-        MyUtils.Log("BiomePool.Awake");
+        //MyUtils.Log("BiomePool.Awake");
         pIsInitialized = false;
         InitializePool();
     }

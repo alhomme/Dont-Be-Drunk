@@ -11,7 +11,7 @@ public class AlcoholPool : MonoBehaviour
 
     private void Awake()
     {
-        MyUtils.Log("ObstaclesPool.Awake");
+        //MyUtils.Log("ObstaclesPool.Awake");
         pIsInitialized = false;
         InitializePool();
     }

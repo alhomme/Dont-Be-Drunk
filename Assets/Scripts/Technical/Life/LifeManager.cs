@@ -50,14 +50,14 @@ public class LifeManager : MonoBehaviour
 
     private void OnHeart()
     {
-        MyUtils.Log("LifeManager.OnHeart");
+        //MyUtils.Log("LifeManager.OnHeart");
         if (mRSO_Life.Value < mRSO_LifeMax.Value)
             mRSO_Life.Value++;
     }
 
     private void OnHit()
     {
-        MyUtils.Log("LifeManager.OnHit");
+        //MyUtils.Log("LifeManager.OnHit");
         mRSO_Life.Value--;
     }
 }

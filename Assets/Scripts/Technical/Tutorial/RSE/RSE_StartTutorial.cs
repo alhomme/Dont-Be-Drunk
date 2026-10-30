@@ -1,6 +1,13 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "RSE_StartTutorial", menuName = "RSE/RSE Start Tutorial")]
-public class RSE_StartTutorial : RuntimeScriptableEvent
+public class RSE_StartTutorial : RuntimeScriptableEvent<TutorialSource>
 {
+}
+
+public enum TutorialSource
+{
+    MainMenuTuto,
+    MainMenuStart,
+    GamePause
 }

@@ -54,7 +54,7 @@ public class ProcGenManager : MonoBehaviour
 
     private void OnDisable()
     {
-        MyUtils.Log("ProcGenManager.OnDisable", false);
+        //MyUtils.Log("ProcGenManager.OnDisable", false);
 
         mRSO_Distance.OnChanged -= OnDistanceChanged;
         mRSO_Seed.Value = 0;
@@ -65,7 +65,7 @@ public class ProcGenManager : MonoBehaviour
 
     private IEnumerator Start()
     {
-        MyUtils.Log("ProcGenManager.Start");
+        //MyUtils.Log("ProcGenManager.Start");
 
         yield return new WaitUntil(() => mRoadPool.pIsInitialized);
         yield return new WaitUntil(() => mItemsPool.pIsInitialized);
@@ -294,7 +294,7 @@ public class ProcGenManager : MonoBehaviour
 
     private void ChangeBiome()
     {
-        MyUtils.Log("ProcGenManager.ChangeBiome");
+        //MyUtils.Log("ProcGenManager.ChangeBiome");
 
         mChunkBiome++;
         if (mChunkBiome > 4)

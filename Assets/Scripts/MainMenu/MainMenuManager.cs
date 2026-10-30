@@ -1,6 +1,6 @@
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class MainMenuManager : MonoBehaviour
@@ -17,6 +17,8 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private RSO_SaveData mRSO_SaveData;
 
     [Header("Elements")]
+    [SerializeField] private EventSystem mEventSystem;
+    [SerializeField] private GameObject mBackground;
     [SerializeField] private GameObject mContent;
     [Header("Name Input")]
     [SerializeField] private TMP_InputField mNameInputField;
@@ -28,8 +30,6 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI mGoldScore;
     [SerializeField] private TextMeshProUGUI mSilverScore;
     [SerializeField] private TextMeshProUGUI mBronzeScore;
-
-    private bool mStartGame;
 
     private void OnEnable()
     {
@@ -71,14 +71,13 @@ public class MainMenuManager : MonoBehaviour
 
     private void Start()
     {
-        mStartGame = false;
         mContent.SetActive(true);
         mRSE_MainMenu.Dispatch();
     }
 
     public void OnStartClicked()
     {
-        MyUtils.Log("OnStartClicked: " + mNameInputField.text);
+        //MyUtils.Log("OnStartClicked: " + mNameInputField.text);
 
         // Store Name in RSO
         if (mNameInputField.text == "")
@@ -98,28 +97,31 @@ public class MainMenuManager : MonoBehaviour
         }
         else
         {
-            mStartGame = true;
             mContent.SetActive(false);
-            mRSE_StartTutorial.Dispatch();
+            mRSE_StartTutorial.Dispatch(TutorialSource.MainMenuStart);
         }
     }
 
     public void OnTutorialClicked()
     {
-        MyUtils.Log("OnTutorialClicked");
+        //MyUtils.Log("OnTutorialClicked");
 
+        mBackground.SetActive(false);
         mContent.SetActive(false);
-        //mTutorialButton.interactable = false;
+        mEventSystem.enabled = false;
+
         mRSE_PlaySFX.Dispatch("UI_Confirm");
 
-        mRSE_StartTutorial.Dispatch();
+        mRSE_StartTutorial.Dispatch(TutorialSource.MainMenuTuto);
     }
 
-    private void OnTutorialEnded(bool status)
+    private void OnTutorialEnded(bool status, TutorialSource source)
     {
+        mEventSystem.enabled = true;
+        mBackground.SetActive(true);
         mContent.SetActive(true);
 
-        if (status && mStartGame)
+        if (status && source == TutorialSource.MainMenuStart)
         {
             // Stop Menu music
             mRSE_PlaySFX.Dispatch("UI_Start");
@@ -131,7 +133,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void OnExitClicked()
     {
-        MyUtils.Log("OnExitClicked");
+        //MyUtils.Log("OnExitClicked");
         Application.Quit();
     }
 }

@@ -29,6 +29,7 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI mSlideText;
 
 
+    private TutorialSource mTutoSource;
     private int mCurrentPanel;
     private int mLastPanel;
 
@@ -64,8 +65,10 @@ public class TutorialManager : MonoBehaviour
         }
     }
 
-    private void StartTutorial()
+    private void StartTutorial(TutorialSource source)
     {
+        mTutoSource = source;
+
         mBackInput.action.performed += OnBackInput;
         mNextInput.action.performed += OnNextInput;
 
@@ -107,13 +110,13 @@ public class TutorialManager : MonoBehaviour
         }
 
         DeactivatePanels();
-        mRSE_EndTutorial.Dispatch(true);
+        mRSE_EndTutorial.Dispatch(true, mTutoSource);
     }
 
     public void OnCloseButton()
     {
         DeactivatePanels();
-        mRSE_EndTutorial.Dispatch(false);
+        mRSE_EndTutorial.Dispatch(false, mTutoSource);
     }
 
     private void OnBackInput(InputAction.CallbackContext ctx)

@@ -20,7 +20,7 @@ public class SceneLoadManager : MonoBehaviour
 
     private void OnEnable()
     {
-        MyUtils.Log("SceneLoadManager.OnEnable: Active scene = " + SceneManager.GetActiveScene().name);
+        //MyUtils.Log("SceneLoadManager.OnEnable: Active scene = " + SceneManager.GetActiveScene().name);
 
         mActiveScene = SceneManager.GetActiveScene().name;
         mRSE_LoadScene.Event += OnLoadScene;
@@ -51,10 +51,10 @@ public class SceneLoadManager : MonoBehaviour
 
     private void UnloadAndLoad(string scene)
     {
-        MyUtils.Log("SceneLoader: Unload " + mActiveScene);
+        //MyUtils.Log("SceneLoader: Unload " + mActiveScene);
         SceneManager.UnloadSceneAsync(mActiveScene);
 
-        MyUtils.Log("SceneLoader: Load: " + scene);
+        //MyUtils.Log("SceneLoader: Load: " + scene);
         SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
     }
 
@@ -65,7 +65,7 @@ public class SceneLoadManager : MonoBehaviour
 
         FadeFromBlack();
 
-        MyUtils.Log("SceneLoader: OnSceneLoaded: " + scene.name);
+        //MyUtils.Log("SceneLoader: OnSceneLoaded: " + scene.name);
         SceneManager.SetActiveScene(scene);
         mActiveScene = scene.name;
 

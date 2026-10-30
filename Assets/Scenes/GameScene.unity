@@ -539,6 +539,7 @@ MonoBehaviour:
   mRSO_Player: {fileID: 11400000, guid: b4a46a1d296d7ba45b459c9dd2a05ec3, type: 2}
   mRSO_AlcoholLevel: {fileID: 11400000, guid: 68878b335d1e3594f95681d6ab68de7d, type: 2}
   mRSE_StarGame: {fileID: 11400000, guid: 434494670f3e3364cbc12424bff80265, type: 2}
+  mRSE_Pause: {fileID: 11400000, guid: 8092c54747fa4f94db3ede2d6efe3074, type: 2}
   mCameraVolume: {fileID: 1508932697}
   mCameraTransform: {fileID: 292048733}
   mCameraPC: {fileID: 292048735}

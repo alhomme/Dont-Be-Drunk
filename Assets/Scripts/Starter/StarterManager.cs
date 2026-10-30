@@ -18,14 +18,14 @@ public class StarterManager : MonoBehaviour
 
     private void Start()
     {
-        MyUtils.Log("StarterManager");
+        //MyUtils.Log("StarterManager");
 
         SceneManager.LoadSceneAsync("TechnicalScene", LoadSceneMode.Additive);
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        MyUtils.Log("StarterManager: OnSceneLoaded: " + scene.name);
+        //MyUtils.Log("StarterManager: OnSceneLoaded: " + scene.name);
         mRSE_LoadScene.Dispatch("MainMenuScene");
     }
 }

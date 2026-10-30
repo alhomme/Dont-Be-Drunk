@@ -193,7 +193,7 @@ public class AudioManager : MonoBehaviour
 
     private void OnMainMenu()
     {
-        MyUtils.Log("AudioManager. OnMainMenu");
+        //MyUtils.Log("AudioManager. OnMainMenu");
         PlayMusic("MainMenu");
     }
 

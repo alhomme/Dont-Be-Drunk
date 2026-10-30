@@ -19,6 +19,7 @@ public class UIManager : MonoBehaviour
     [Header("RSE")]
     [SerializeField] private RSE_Save mRSE_Save;
     [SerializeField] private RSE_StartTutorial mRSE_StartTutorial;
+    [SerializeField] private RSE_EndTutorial mRSE_EndTutorial;
     [SerializeField] private RSE_StartGame mRSE_StartGame;
     [SerializeField] private RSE_GameOver mRSE_GameOver;
     [SerializeField] private RSE_Pause mRSE_Pause;
@@ -63,6 +64,7 @@ public class UIManager : MonoBehaviour
 
     [Header("Pause")]
     [SerializeField] private GameObject mPausePanel;
+    [SerializeField] private GameObject mPauseTutorialButton;
     [SerializeField] private GameObject mPauseCloseButton;
 
     [Header("Game Over")]
@@ -98,6 +100,7 @@ public class UIManager : MonoBehaviour
 
     private void OnEnable()
     {
+        mRSE_EndTutorial.Event += OnTutorialEnded;
         mRSE_StartGame.Event += OnStartGame;
         mRSE_GameOver.Event += OnGameOver;
         mRSE_Puke.Event += OnPuke;
@@ -115,6 +118,7 @@ public class UIManager : MonoBehaviour
     {
         DisableAll();
 
+        mRSE_EndTutorial.Event -= OnTutorialEnded;
         mRSE_StartGame.Event -= OnStartGame;
         mRSE_GameOver.Event -= OnGameOver;
         mRSE_Puke.Event -= OnPuke;
@@ -128,6 +132,7 @@ public class UIManager : MonoBehaviour
 
     private void DisableAll()
     {
+        DisableEventSystem();
         DisableScore();
         DisableSeed();
         DisableLife();
@@ -139,14 +144,18 @@ public class UIManager : MonoBehaviour
         DisablePuke();
     }
 
+    private void DisableEventSystem()
+    {
+        mEventSystem.SetSelectedGameObject(null);
+        mEventSystem.enabled = false;
+    }
+
     private void OnStartGame()
     {
-        mScoreText.enabled = true;
-        mSeedText.enabled = true;
-
-        mLife.SetActive(true);
-
-        mAlcoholGo.SetActive(true);
+        EnableScore();
+        EnableSeed();
+        EnableLife();
+        EnableAlcoholBar();
 
         mPauseInput.action.performed += OnPauseInput;
         mReturnInput.action.performed += OnReturnInput;
@@ -166,6 +175,11 @@ public class UIManager : MonoBehaviour
         mScoreText.enabled = false;
     }
 
+    private void EnableScore()
+    {
+        mScoreText.enabled = true;
+    }
+
     private void OnSeedChanged(int seed)
     {
         mSeedText.text = seed.ToString();
@@ -174,6 +188,11 @@ public class UIManager : MonoBehaviour
     private void DisableSeed()
     {
         mSeedText.enabled = false;
+    }
+
+    private void EnableSeed()
+    {
+        mSeedText.enabled = true;
     }
 
     private void OnLifeChanged(int life)
@@ -192,16 +211,20 @@ public class UIManager : MonoBehaviour
     private void DisableLife()
     {
         mLife.SetActive(false);
-        for (int i = 0; i < mLifeImages.Length; i++)
-            mLifeImages[i].enabled = false;
+        //for (int i = 0; i < mLifeImages.Length; i++)
+        //    mLifeImages[i].enabled = false;
+    }
+
+    private void EnableLife()
+    {
+        mLife.SetActive(true);
     }
 
     private void OnAlcoholLevelChanged(int alcoholLevel)
     {
-        MyUtils.Log("UI Manager. OnAlcoholLevelChanged: " + alcoholLevel);
+        //MyUtils.Log("UI Manager. OnAlcoholLevelChanged: " + alcoholLevel);
 
         float value = (float)alcoholLevel / 100;
-        //mAlcoholBar.value = value;
 
         LMotion.Create(mAlcoholBar.value, value, 0.5f)
             .WithEase(Ease.OutQuad)
@@ -215,6 +238,11 @@ public class UIManager : MonoBehaviour
     private void DisableAlcoholBar()
     {
         mAlcoholGo.SetActive(false);
+    }
+
+    private void EnableAlcoholBar()
+    {
+        mAlcoholGo.SetActive(true);
     }
 
     private void UpdateAlcoholBarColor(float value)
@@ -232,7 +260,7 @@ public class UIManager : MonoBehaviour
 
     private void OnBiomeChanged(int biome)
     {
-       MyUtils.Log("UIManager.OnBiomeChanged");
+       //MyUtils.Log("UIManager.OnBiomeChanged");
 
         UpdateAlcoholBarColor(mAlcoholBar.value);
 
@@ -289,7 +317,7 @@ public class UIManager : MonoBehaviour
 
     private void OnGameOver(GameOverType goType)
     {
-        MyUtils.Log("UIManager.OnGameOver: " + goType);
+        //MyUtils.Log("UIManager.OnGameOver: " + goType);
 
         DisableScore();
         DisablePause();
@@ -329,8 +357,6 @@ public class UIManager : MonoBehaviour
 
     private void DisableGameOver()
     {
-        mEventSystem.SetSelectedGameObject(null);
-        mEventSystem.enabled = false;
         mGameOverPanel.SetActive(false);
     }
 
@@ -486,7 +512,7 @@ public class UIManager : MonoBehaviour
 
     private void OnPauseInput(InputAction.CallbackContext ctx)
     {
-        MyUtils.Log("UIManager.OnOpenMenu: " + mPausePanel.activeInHierarchy);
+        //MyUtils.Log("UIManager.OnOpenMenu: " + mPausePanel.activeInHierarchy);
 
         if (mPausePanel.activeInHierarchy)
         {
@@ -500,7 +526,7 @@ public class UIManager : MonoBehaviour
 
     private void OnReturnInput(InputAction.CallbackContext ctx)
     {
-        MyUtils.Log("UIManager.OnCloseMenu");
+        //MyUtils.Log("UIManager.OnCloseMenu");
 
         if (mPausePanel.activeInHierarchy)
         {
@@ -524,6 +550,37 @@ public class UIManager : MonoBehaviour
         mPausePanel.SetActive(false);
 
         mRSE_Pause.Dispatch(false);
+    }
+
+    public void TutorialPauseMenu()
+    {
+        //MyUtils.Log("UIManger.TutorialPauseMenu");
+
+        DisableScore();
+        DisableSeed();
+        DisableLife();
+        DisableAlcoholBar();
+
+        mEventSystem.enabled = false;
+        mPausePanel.SetActive(false);
+
+        mRSE_PlaySFX.Dispatch("UI_Confirm");
+
+        mRSE_StartTutorial.Dispatch(TutorialSource.GamePause);
+    }
+
+    private void OnTutorialEnded(bool status, TutorialSource source)
+    {
+        if (source == TutorialSource.GamePause)
+        {
+            EnableScore();
+            EnableSeed();
+            EnableLife();
+            EnableAlcoholBar();
+
+            mEventSystem.enabled = true;
+            mPausePanel.SetActive(true);
+        }
     }
 
     private void DisablePause()

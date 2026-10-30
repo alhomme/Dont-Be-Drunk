@@ -161,7 +161,7 @@ public class PlayerManager : MonoBehaviour
 
     private void Move()
     {
-        MyUtils.Log("Speed = " + mRSO_ForwardSpeed.Value, false);
+        //MyUtils.Log("Speed = " + mRSO_ForwardSpeed.Value, false);
 
         // Z
         transform.position += Vector3.forward * mRSO_ForwardSpeed.Value * Time.deltaTime;
@@ -183,7 +183,7 @@ public class PlayerManager : MonoBehaviour
 
     private void UpdateState(PlayerState newState)
     {
-        MyUtils.Log("PlayerManager.UpdateState " + mState + " => " + newState, false);
+        //MyUtils.Log("PlayerManager.UpdateState " + mState + " => " + newState, false);
 
         if (mState == newState)
             return;
@@ -195,14 +195,14 @@ public class PlayerManager : MonoBehaviour
 
     private void StopState()
     {
-        MyUtils.Log("PlayerManager.StopState", false);
+        //MyUtils.Log("PlayerManager.StopState", false);
 
         mCurrentMotion.TryCancel();
     }
 
     private void StartState(PlayerState state)
     {
-        MyUtils.Log("PlayerManager.StartState " + state, false);
+        //MyUtils.Log("PlayerManager.StartState " + state, false);
 
         switch (state)
         {
@@ -223,7 +223,7 @@ public class PlayerManager : MonoBehaviour
 
     private void PauseState(float resume)
     {
-        MyUtils.Log("PlayerManager.StartState", false);
+        //MyUtils.Log("PlayerManager.StartState", false);
 
         if (mCurrentMotion.IsActive())
             mCurrentMotion.PlaybackSpeed = resume;
@@ -371,7 +371,7 @@ public class PlayerManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        MyUtils.Log("MovementManager.OnTriggerEnter: " + other.gameObject.tag);
+        //MyUtils.Log("MovementManager.OnTriggerEnter: " + other.gameObject.tag);
 
         if (mLastObstacleHit != other.gameObject.transform.position)
         {

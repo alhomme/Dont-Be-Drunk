@@ -21,7 +21,7 @@ public class SpeedManager : MonoBehaviour
 
     private void OnEnable()
     {
-        MyUtils.Log("SpeedManager.OnEnable", false);
+        //MyUtils.Log("SpeedManager.OnEnable", false);
 
         mRSE_StartGame.Event += OnStartGame;
 
@@ -57,10 +57,6 @@ public class SpeedManager : MonoBehaviour
 
             if (mRSO_LateralSpeed.Value < mMaxLateralSpeed)
                 mRSO_LateralSpeed.Value += mIncLateralSpeed;
-
-            MyUtils.Log("SpeedManager: One second", false);
-            MyUtils.Log("SpeedManager: Forward speed = " + mRSO_ForwardSpeed.Value, false);
-            MyUtils.Log("SpeedManager: Lateral speed = " + mRSO_LateralSpeed.Value, false);
 
             countTime = 0f;
         }

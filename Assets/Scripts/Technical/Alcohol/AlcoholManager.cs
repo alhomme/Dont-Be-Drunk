@@ -47,7 +47,7 @@ public class AlcoholManager : MonoBehaviour
             if (drink == mSSO_ItemsAlcohol.Value.pTags[i])
             {
                 mRSO_AlcoholLevel.Value += mSSO_ItemsAlcohol.Value.pEffects[i] * 10;
-                MyUtils.Log("New Alcohol value: " + mRSO_AlcoholLevel.Value);
+                //MyUtils.Log("New Alcohol value: " + mRSO_AlcoholLevel.Value);
                 return;
             }
         }

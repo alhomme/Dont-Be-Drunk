@@ -3835,9 +3835,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: OnStartClicked
+      - m_Target: {fileID: 1707397078}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: TutorialPauseMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5169,7 +5169,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 885112482}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -6531,7 +6531,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1121124186}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -9323,7 +9323,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1641938799}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -9865,6 +9865,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
   mRSE_Save: {fileID: 11400000, guid: 87781d54cbddcf648a42a0e8e509e3c4, type: 2}
   mRSE_StartTutorial: {fileID: 11400000, guid: e4d066f498efe10458b79fcedb8d5ada, type: 2}
+  mRSE_EndTutorial: {fileID: 11400000, guid: adf70736362ec9e4cb85243c1f34d660, type: 2}
   mRSE_StartGame: {fileID: 11400000, guid: 434494670f3e3364cbc12424bff80265, type: 2}
   mRSE_GameOver: {fileID: 11400000, guid: e1af525915569f346b82816d45e009d1, type: 2}
   mRSE_Pause: {fileID: 11400000, guid: 8092c54747fa4f94db3ede2d6efe3074, type: 2}
@@ -9906,6 +9907,7 @@ MonoBehaviour:
   - {fileID: 637894957}
   - {fileID: 1468274068}
   mPausePanel: {fileID: 1727283439}
+  mPauseTutorialButton: {fileID: 685194195}
   mPauseCloseButton: {fileID: 1510357382}
   mGameOverPanel: {fileID: 1099635714}
   mGameOverIcon: {fileID: 803722290}
