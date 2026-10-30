@@ -2,6 +2,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class TutorialManager : MonoBehaviour
@@ -14,6 +15,9 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private RSE_StartTutorial mRSE_StartTutorial;
     [SerializeField] private RSE_EndTutorial mRSE_EndTutorial;
     [SerializeField] private RSE_Save mRSE_Save;
+
+    [Header("Event System")]
+    [SerializeField] private EventSystem mEventSystem;
 
     [Header("Inputs")]
     [SerializeField] private InputActionReference mBackInput;
@@ -41,7 +45,7 @@ public class TutorialManager : MonoBehaviour
 
         DeactivatePanels();
 
-        // Retrieve Tutorial value from SaveData
+        mEventSystem.enabled = false;
     }
 
     private void OnDisable()
@@ -51,6 +55,8 @@ public class TutorialManager : MonoBehaviour
         mRSE_StartTutorial.Event -= StartTutorial;
 
         DeactivatePanels();
+
+        mEventSystem.enabled = false;
     }
 
     private void DeactivatePanels()
@@ -76,6 +82,8 @@ public class TutorialManager : MonoBehaviour
         mCurrentPanel = 0;
         mLastPanel = mPanels.Count - 1;
         mPanels[mCurrentPanel].SetActive(true);
+
+        mEventSystem.enabled = true;
     }
 
     public void OnNext()
@@ -110,12 +118,14 @@ public class TutorialManager : MonoBehaviour
         }
 
         DeactivatePanels();
+        mEventSystem.enabled = false;
         mRSE_EndTutorial.Dispatch(true, mTutoSource);
     }
 
     public void OnCloseButton()
     {
         DeactivatePanels();
+        mEventSystem.enabled = false;
         mRSE_EndTutorial.Dispatch(false, mTutoSource);
     }
 

@@ -97,6 +97,7 @@ public class MainMenuManager : MonoBehaviour
         }
         else
         {
+            mBackground.SetActive(false);
             mContent.SetActive(false);
             mRSE_StartTutorial.Dispatch(TutorialSource.MainMenuStart);
         }

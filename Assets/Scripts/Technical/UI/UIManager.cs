@@ -136,6 +136,7 @@ public class UIManager : MonoBehaviour
         DisableScore();
         DisableSeed();
         DisableLife();
+        DisableLifeSprites();
         DisableAlcoholBar();
         DisableGameOver();
         DisableGoPolice();
@@ -211,8 +212,13 @@ public class UIManager : MonoBehaviour
     private void DisableLife()
     {
         mLife.SetActive(false);
-        //for (int i = 0; i < mLifeImages.Length; i++)
-        //    mLifeImages[i].enabled = false;
+
+    }
+
+    private void DisableLifeSprites()
+    {
+        for (int i = 0; i < mLifeImages.Length; i++)
+            mLifeImages[i].enabled = false;
     }
 
     private void EnableLife()

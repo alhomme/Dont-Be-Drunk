@@ -40,6 +40,8 @@ public class SaveManager : MonoBehaviour
 
     private void CreateSaveFile()
     {
+        mRSO_SaveData.Value = new SaveData();
+
         mRSO_SaveData.Value.pGoldScore = new SaveScore
         {
             pName = "",
